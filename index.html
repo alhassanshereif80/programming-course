@@ -165,6 +165,52 @@
   .trust-item img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block;}
   .trust-cap{padding:12px 14px; font-size:12.5px; color:var(--text-muted); line-height:1.6;}
 
+  /* CHALLENGE ZONE */
+  .score-panel{
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px;
+    padding:18px 22px; margin-bottom:26px;
+  }
+  .score-bar-track{flex:1; height:10px; background:var(--bg-elevated-2); border-radius:6px; overflow:hidden; min-width:140px;}
+  .score-bar-fill{height:100%; background:linear-gradient(90deg,var(--purple-bright),var(--teal)); transition:width .5s ease; width:0%;}
+  .score-num{font-size:15px;}
+
+  .challenge-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+  .challenge-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px; padding:22px;
+    display:flex; flex-direction:column;
+  }
+  .challenge-card .ch-num{font-family:'JetBrains Mono'; font-size:11px; color:var(--teal); margin-bottom:10px; unicode-bidi:isolate;}
+  .challenge-card .ch-q{font-size:14.5px; line-height:1.8; margin-bottom:14px;}
+  .challenge-card pre{
+    background:var(--bg-elevated-2); border:1px solid var(--border); border-radius:8px;
+    padding:12px 14px; font-family:'JetBrains Mono'; font-size:12.5px; color:var(--mint);
+    overflow-x:auto; margin:0 0 14px; direction:ltr; text-align:left; line-height:1.6;
+  }
+  .opt-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:auto;}
+  .opt-btn{
+    font-size:13px; border:1px solid var(--border); background:var(--bg-elevated-2); color:var(--text);
+    padding:10px 12px; border-radius:8px; cursor:pointer; transition:all .15s; text-align:center; font-family:inherit;
+  }
+  .opt-btn:hover:not(:disabled){border-color:var(--teal); color:var(--mint);}
+  .opt-btn.correct{background:rgba(63,191,106,0.15); border-color:#3fbf6a; color:#8be3a6;}
+  .opt-btn.wrong{background:rgba(229,85,90,0.15); border-color:#e5555a; color:#f0999c;}
+  .opt-btn:disabled{cursor:default;}
+  .ch-feedback{font-size:12.5px; margin-top:10px; font-weight:600; min-height:16px;}
+  .ch-feedback.ok{color:#3fbf6a;}
+  .ch-feedback.bad{color:#e5555a;}
+
+  .discount-panel{
+    margin-top:24px;
+    background:linear-gradient(135deg, rgba(78,31,111,0.3), rgba(69,169,169,0.22));
+    border:1px solid var(--teal); border-radius:16px; padding:30px; text-align:center;
+  }
+  .discount-code{
+    font-size:22px; font-weight:700; letter-spacing:0.15em; color:var(--mint);
+    background:var(--bg-elevated-2); display:inline-block; padding:10px 22px;
+    border-radius:8px; margin-top:12px; direction:ltr;
+  }
+
   .explorer{
     display:grid; grid-template-columns:290px 1fr; border:1px solid var(--border);
     border-radius:14px; overflow:hidden; background:var(--bg-elevated);
@@ -228,6 +274,8 @@
   .lesson .dur{font-family:'JetBrains Mono'; font-size:12px; color:var(--text-muted); unicode-bidi:isolate;}
   .locked-panel{padding:60px 30px; text-align:center; color:var(--text-muted);}
   .locked-panel .big-lock{font-size:30px; margin-bottom:16px; display:block;}
+  .video-wrap{position:relative; width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:#000;}
+  .video-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
 
   .cta-strip{
     background:var(--bg-elevated); border:1px solid var(--border); border-radius:18px;
@@ -302,6 +350,8 @@
     .nav-links{display:none;}
     .values{grid-template-columns:repeat(2,1fr);}
     .trust-gallery{grid-template-columns:repeat(2,1fr);}
+    .challenge-grid{grid-template-columns:1fr;}
+    .opt-grid{grid-template-columns:1fr;}
     .explorer{grid-template-columns:1fr;}
     .explorer-sidebar{display:flex; overflow-x:auto; border-inline-end:none; border-bottom:1px solid var(--border); padding:12px;}
     .folder-label{display:none;}
@@ -360,6 +410,7 @@
     <div class="nav-links">
       <a href="#about" data-i18n="navAbout">عن المعلم</a>
       <a href="#courses" data-i18n="navCourses">الكورسات</a>
+      <a href="#challenges" data-i18n="navChallenges">🎮 تحديات</a>
       <a href="#contact" data-i18n="navContact">تواصل</a>
     </div>
     <div class="nav-right">
@@ -484,6 +535,30 @@
     </div>
   </section>
 
+  <section class="section" id="challenges">
+    <div class="section-head">
+      <div class="section-tag" data-i18n="chTag">// وقفة تحدي</div>
+      <h2 class="section-title" data-i18n="chTitle">جرّب عقلك: ألغاز وتحديات برمجة</h2>
+      <p class="section-sub" data-i18n="chSub">حل التحديات دي وشوف تقدر توصل لخصم عندك ولا لأ 😉</p>
+    </div>
+
+    <div class="score-panel">
+      <div style="display:flex; align-items:center; gap:12px; flex:1; min-width:200px;">
+        <span class="mono score-num"><span id="score-num">0</span>/5</span>
+        <div class="score-bar-track"><div class="score-bar-fill" id="score-bar" style="width:0%;"></div></div>
+      </div>
+      <button class="btn-ghost" id="challenge-reset" style="padding:9px 16px; font-size:13px;" data-i18n="chReset">إعادة المحاولة</button>
+    </div>
+
+    <div class="challenge-grid" id="challenge-grid"></div>
+
+    <div class="discount-panel" id="discount-panel" style="display:none;">
+      <div id="discount-title" style="font-size:19px; font-weight:700;"></div>
+      <p id="discount-desc" style="color:var(--text-muted); margin:8px 0 4px;"></p>
+      <div class="discount-code mono" id="discount-code"></div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="cta-strip">
       <div>
@@ -521,7 +596,7 @@ const i18n = {
     gateSub:'املأ النموذج التالي، وبعد ما تخلّص اضغط على "تم التسجيل" تحت عشان ترجع للموقع.',
     gateSubmit:'تم التسجيل، رجوع للموقع', gateNote:'بياناتك بتتحفظ مباشرة في نموذج جوجل الخاص بمعلمك، ومش بتتشارك مع أي طرف تاني.',
     titlebarPath:'~/alhassan-shereif/برمجة_وذكاء_اصطناعي',
-    navAbout:'عن المعلم', navCourses:'الكورسات', navContact:'تواصل', navCta:'./ابدأ_التعلم', navRegister:'تسجيل البيانات', navRegistered:'بياناتك متسجلة ✓',
+    navAbout:'عن المعلم', navCourses:'الكورسات', navContact:'تواصل', navCta:'./ابدأ_التعلم', navRegister:'تسجيل البيانات', navRegistered:'بياناتك متسجلة ✓', navChallenges:'🎮 تحديات',
     heroEyebrow:'learn.build.grow()',
     heroTitle:'تعلّم <span class="grad">البرمجة والذكاء الاصطناعي</span> بطريقة عملية وممتعة',
     curriculumTag:'مادة البرمجة والذكاء الاصطناعي — المرحلة الثانوية',
@@ -538,6 +613,18 @@ const i18n = {
     trustBadge:'بالتعاون مع أكاديمية المستقبل — Since 2018',
     g1Cap:'ختام كورس البرمجة — الجروب الأول', g2Cap:'خريجين الجروب الأول من طلاب البرمجة',
     g3Cap:'فعاليات كورس البرمجة — فرع المنيا', g4Cap:'من داخل المحاضرات العملية للبرمجة',
+    chTag:'// وقفة تحدي', chTitle:'جرّب عقلك: ألغاز وتحديات برمجة',
+    chSub:'حل التحديات دي وشوف تقدر توصل لخصم عندك ولا لأ 😉',
+    chReset:'إعادة المحاولة', chCorrect:'إجابة صحيحة! ✅', chWrong:'مش صحيحة، بس محاولة كويسة 💪',
+    tier1Title:'🎉 مبروك! فتحت خصم', tier1Desc:'وريه لمعلمك عشان يفعّله ليك:',
+    tier2Title:'🏆 إنجاز كامل! فتحت خصم أكبر', tier2Desc:'حليت كل التحديات صح — عاش! وريه لمعلمك:',
+    challenges:[
+      { q:'أكمل التسلسل: 2, 4, 8, 16, ؟', code:null, options:['18','20','32','24'], correct:2 },
+      { q:'لو 5 مكن تصنع 5 قطع في 5 دقايق، محتاجين كام دقيقة عشان 100 مكنة تصنع 100 قطعة؟', code:null, options:['100 دقيقة','20 دقيقة','5 دقايق','50 دقيقة'], correct:2 },
+      { q:'ايه ناتج الكود ده؟', code:'x = 5\ny = x + 3\nx = y - 2\nprint(x)', options:['5','6','7','8'], correct:1 },
+      { q:'فين المشكلة في الكود ده؟', code:'for i in range(5)\n    print(i)', options:['ناقص نقطتين (:) بعد range(5)','لازم نستخدم while بدل for','الأقواس غلط','مفيش مشكلة'], correct:0 },
+      { q:'لو X = True و Y = False، ناتج (X and Y) ايه؟', code:null, options:['True','False','Error','1'], correct:1 },
+    ],
     coursesTag:'// كورسات المادة', coursesTitle:'اختر كورس وابدأ التعلّم',
     coursesSub:'الكورس التأسيسي متاح الآن. باقي كورسات المنهج هتفتح تباعًا أول ما تكون جاهزة.',
     folderLabel:'📁 courses/',
@@ -557,7 +644,7 @@ const i18n = {
     gateSub:"Fill in the form below, then tap \"I've registered\" to return to the site.",
     gateSubmit:"I've registered — back to site", gateNote:"Your info goes straight into your teacher's Google Form and isn't shared with anyone else.",
     titlebarPath:'~/alhassan-shereif/programming_and_ai',
-    navAbout:'About', navCourses:'Courses', navContact:'Contact', navCta:'./start_learning', navRegister:'Register', navRegistered:'Registered ✓',
+    navAbout:'About', navCourses:'Courses', navContact:'Contact', navCta:'./start_learning', navRegister:'Register', navRegistered:'Registered ✓', navChallenges:'🎮 Challenges',
     heroEyebrow:'learn.build.grow()',
     heroTitle:'Learn <span class="grad">Programming & AI</span> the hands-on way',
     curriculumTag:'Programming & AI Curriculum — Secondary School',
@@ -574,6 +661,18 @@ const i18n = {
     trustBadge:'In partnership with Future Academy — Since 2018',
     g1Cap:'Completion of the first programming course group', g2Cap:'Graduates of the first student group',
     g3Cap:'Programming course activities — Minya branch', g4Cap:'Inside the hands-on programming lectures',
+    chTag:'// challenge break', chTitle:'Test your brain: logic puzzles & coding challenges',
+    chSub:"Solve these and see if you can unlock a discount 😉",
+    chReset:'Try again', chCorrect:'Correct! ✅', chWrong:'Not quite, good attempt though 💪',
+    tier1Title:'🎉 Nice! You unlocked a discount', tier1Desc:'Show this to your teacher to activate it:',
+    tier2Title:'🏆 Full clear! Bigger discount unlocked', tier2Desc:'You solved every challenge — awesome! Show this to your teacher:',
+    challenges:[
+      { q:'Complete the sequence: 2, 4, 8, 16, ?', code:null, options:['18','20','32','24'], correct:2 },
+      { q:'If 5 machines make 5 widgets in 5 minutes, how many minutes for 100 machines to make 100 widgets?', code:null, options:['100 minutes','20 minutes','5 minutes','50 minutes'], correct:2 },
+      { q:'What does this code print?', code:'x = 5\ny = x + 3\nx = y - 2\nprint(x)', options:['5','6','7','8'], correct:1 },
+      { q:"What's wrong with this code?", code:'for i in range(5)\n    print(i)', options:['Missing a colon (:) after range(5)','Should use while instead of for','The parentheses are wrong','Nothing is wrong'], correct:0 },
+      { q:'If X = True and Y = False, what is (X and Y)?', code:null, options:['True','False','Error','1'], correct:1 },
+    ],
     coursesTag:'// curriculum courses', coursesTitle:'Pick a course, start learning',
     coursesSub:'The Foundational Course is available now. The rest of the curriculum unlocks as it becomes ready.',
     folderLabel:'📁 courses/',
@@ -609,6 +708,7 @@ function applyI18n(lang){
   });
 
   renderCourse(unlockedCourse === 'c1' ? 'c1' : unlockedCourse);
+  renderChallenges();
   const w = document.getElementById('welcome-name');
   if(w){
     w.textContent = dict.welcomeGeneric;
@@ -631,10 +731,13 @@ function renderCourse(id){
 
   if(id === 'c1'){
     body.innerHTML = `
-      <div class="locked-panel" style="width:100%;">
-        <span class="big-lock">📂</span>
-        <h3 style="margin-bottom:10px;">${dict.emptyTitle}</h3>
-        <p style="max-width:420px; margin:0 auto; line-height:1.8;">${dict.emptyDesc}</p>
+      <div style="width:100%;">
+        <h3 style="margin-bottom:14px;">${dict.courseTitle}</h3>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/Wki93VD5ZD4" title="${dict.courseTitle}"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen loading="lazy"></iframe>
+        </div>
       </div>
     `;
   } else {
@@ -654,6 +757,112 @@ document.querySelectorAll('.file-item').forEach(item=>{
     item.classList.add('active');
     renderCourse(item.dataset.course);
   });
+});
+
+/* ---------- challenge zone ---------- */
+const CHALLENGE_STORAGE_KEY = 'as_challenge_answers';
+const DISCOUNT_CODE_TIER1 = 'LOGIC10';
+const DISCOUNT_CODE_TIER2 = 'LOGIC20';
+
+function loadChallengeState(){
+  try{
+    const raw = localStorage.getItem(CHALLENGE_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveChallengeState(state){
+  try{ localStorage.setItem(CHALLENGE_STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+function renderChallenges(){
+  const dict = i18n[currentLang];
+  const grid = document.getElementById('challenge-grid');
+  const state = loadChallengeState();
+
+  grid.innerHTML = dict.challenges.map((ch, idx) => `
+    <div class="challenge-card" data-idx="${idx}">
+      <div class="ch-num mono">CHALLENGE_${idx+1}</div>
+      <div class="ch-q">${ch.q}</div>
+      ${ch.code ? `<pre>${ch.code}</pre>` : ''}
+      <div class="opt-grid">
+        ${ch.options.map((opt,i)=>`<button class="opt-btn" data-opt="${i}">${opt}</button>`).join('')}
+      </div>
+      <div class="ch-feedback" id="feedback-${idx}"></div>
+    </div>
+  `).join('');
+
+  dict.challenges.forEach((ch, idx) => {
+    const card = grid.querySelector(`[data-idx="${idx}"]`);
+    const buttons = card.querySelectorAll('.opt-btn');
+    const feedback = card.querySelector(`#feedback-${idx}`);
+    const answered = state[idx];
+
+    if(answered !== undefined){
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if(i === ch.correct) btn.classList.add('correct');
+        else if(i === answered.picked && !answered.correct) btn.classList.add('wrong');
+      });
+      feedback.textContent = answered.correct ? dict.chCorrect : dict.chWrong;
+      feedback.className = 'ch-feedback ' + (answered.correct ? 'ok' : 'bad');
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const picked = parseInt(btn.dataset.opt, 10);
+        const correct = picked === ch.correct;
+        const s = loadChallengeState();
+        s[idx] = { picked, correct };
+        saveChallengeState(s);
+
+        buttons.forEach((b, i) => {
+          b.disabled = true;
+          if(i === ch.correct) b.classList.add('correct');
+          else if(i === picked && !correct) b.classList.add('wrong');
+        });
+        feedback.textContent = correct ? dict.chCorrect : dict.chWrong;
+        feedback.className = 'ch-feedback ' + (correct ? 'ok' : 'bad');
+
+        updateScore();
+      });
+    });
+  });
+
+  updateScore();
+}
+
+function updateScore(){
+  const dict = i18n[currentLang];
+  const state = loadChallengeState();
+  const total = dict.challenges.length;
+  const correctCount = Object.values(state).filter(a => a.correct).length;
+
+  document.getElementById('score-num').textContent = correctCount;
+  document.getElementById('score-bar').style.width = (correctCount / total * 100) + '%';
+
+  const panel = document.getElementById('discount-panel');
+  const titleEl = document.getElementById('discount-title');
+  const descEl = document.getElementById('discount-desc');
+  const codeEl = document.getElementById('discount-code');
+
+  if(correctCount >= total){
+    panel.style.display = 'block';
+    titleEl.textContent = dict.tier2Title;
+    descEl.textContent = dict.tier2Desc;
+    codeEl.textContent = DISCOUNT_CODE_TIER2;
+  } else if(correctCount >= 3){
+    panel.style.display = 'block';
+    titleEl.textContent = dict.tier1Title;
+    descEl.textContent = dict.tier1Desc;
+    codeEl.textContent = DISCOUNT_CODE_TIER1;
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+document.getElementById('challenge-reset').addEventListener('click', () => {
+  saveChallengeState({});
+  renderChallenges();
 });
 
 /* ---------- registration gate (Google Form embed, mandatory) ---------- */
