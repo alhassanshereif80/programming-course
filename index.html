@@ -277,6 +277,55 @@
   .video-wrap{position:relative; width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:#000;}
   .video-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
 
+  /* EXAM */
+  .exam-card{background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px; padding:26px; margin-top:24px;}
+  .exam-head h3{font-size:19px; margin-bottom:6px;}
+  .exam-sub{color:var(--text-muted); font-size:13px; margin:0 0 22px;}
+  .exam-part{margin-bottom:28px;}
+  .exam-part-title{font-family:'JetBrains Mono'; font-size:12px; color:var(--teal); margin-bottom:16px; letter-spacing:0.03em; unicode-bidi:isolate;}
+  .exam-q{margin-bottom:20px; padding-bottom:18px; border-bottom:1px solid var(--border);}
+  .exam-q:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
+  .exam-q-text{font-size:14px; margin-bottom:12px; line-height:1.8;}
+  .exam-opt{display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:8px; margin-bottom:8px; cursor:pointer; transition:all .15s;}
+  .exam-opt:hover{border-color:var(--teal);}
+  .exam-opt input{accent-color:var(--teal); flex-shrink:0;}
+  .exam-opt.correct{background:rgba(63,191,106,0.12); border-color:#3fbf6a;}
+  .exam-opt.wrong{background:rgba(229,85,90,0.12); border-color:#e5555a;}
+  .exam-blank-input, .exam-essay-input{
+    width:100%; background:var(--bg-elevated-2); border:1px solid var(--border); border-radius:8px;
+    padding:11px 13px; color:var(--text); font-family:inherit; font-size:14px;
+  }
+  .exam-blank-input:focus, .exam-essay-input:focus{outline:none; border-color:var(--teal);}
+  .exam-essay-input{min-height:80px; resize:vertical; line-height:1.7;}
+  .exam-blank-input.correct{border-color:#3fbf6a;}
+  .exam-blank-input.wrong{border-color:#e5555a;}
+  .exam-answer-reveal{font-size:12px; color:var(--mint); margin-top:7px; font-family:'JetBrains Mono'; unicode-bidi:isolate;}
+  .exam-essay-note{font-size:12px; color:var(--text-muted); margin-top:8px;}
+  .exam-score-banner{
+    background:linear-gradient(135deg, rgba(78,31,111,0.3), rgba(69,169,169,0.22));
+    border:1px solid var(--teal); border-radius:12px; padding:20px; margin-bottom:26px; text-align:center;
+  }
+  .exam-score-banner .big{font-size:24px; font-weight:800; font-family:'JetBrains Mono'; color:var(--mint);}
+  .exam-score-banner p{margin:8px 0 0; font-size:13px; color:var(--text-muted);}
+  .exam-whatsapp-cta{margin-top:24px; text-align:center; padding-top:22px; border-top:1px solid var(--border);}
+  .exam-whatsapp-cta p{color:var(--text-muted); font-size:13px; margin-bottom:14px; line-height:1.7;}
+
+  .whatsapp-btn{
+    display:inline-flex; align-items:center; gap:10px; background:#25D366; color:#fff; font-weight:700;
+    padding:13px 26px; border-radius:10px; text-decoration:none; font-size:14.5px; transition:transform .15s ease;
+  }
+  .whatsapp-btn:hover{transform:translateY(-2px);}
+  .whatsapp-btn svg{width:20px; height:20px; flex-shrink:0;}
+
+  .floating-whatsapp{
+    position:fixed; bottom:22px; inset-inline-end:22px; z-index:60;
+    width:56px; height:56px; border-radius:50%; background:#25D366;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 24px rgba(0,0,0,0.35); text-decoration:none; transition:transform .2s ease;
+  }
+  .floating-whatsapp:hover{transform:scale(1.08);}
+  .floating-whatsapp svg{width:28px; height:28px;}
+
   .cta-strip{
     background:var(--bg-elevated); border:1px solid var(--border); border-radius:18px;
     padding:48px; display:flex; align-items:center; justify-content:space-between; gap:32px;
@@ -569,6 +618,25 @@
     </div>
   </section>
 
+  <section class="section" id="contact">
+    <div class="section-head">
+      <div class="section-tag" data-i18n="contactTag">// تواصل معايا</div>
+      <h2 class="section-title" data-i18n="contactTitle">عندك سؤال؟ كلّمني على طول</h2>
+      <p class="section-sub" data-i18n="contactSub">لو محتاج تفسير حاجة، أو عندك استفسار عن الكورس أو التسجيل، تقدر تتواصل معايا مباشرة على واتساب.</p>
+    </div>
+    <a class="whatsapp-btn" href="https://wa.me/201064666228" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.004c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.85 9.85 0 0012.04 2zm5.8 14.11c-.24.68-1.4 1.3-1.93 1.38-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.11-4.85-4.3-.14-.19-1.16-1.54-1.16-2.94s.72-2.09.98-2.38c.24-.27.53-.34.71-.34l.51.01c.16.01.38-.06.6.46.24.57.79 1.97.86 2.11.07.14.11.31.02.5-.09.19-.14.31-.27.48-.14.16-.29.36-.41.49-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.19-.27.37-.22.62-.13.26.09 1.62.77 1.9.91.28.14.46.21.53.32.07.12.07.65-.17 1.33z"/></svg>
+      <span data-i18n="contactBtn">تواصل عبر واتساب</span>
+    </a>
+    <div class="mono" style="margin-top:16px; color:var(--text-muted); font-size:13px; direction:ltr; display:inline-block; unicode-bidi:isolate;">01064666228</div>
+  </section>
+
+  <div class="floating-whatsapp" id="floating-whatsapp" style="display:none;">
+    <a href="https://wa.me/201064666228" target="_blank" rel="noopener" style="display:flex; width:100%; height:100%; align-items:center; justify-content:center;">
+      <svg viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.004c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.85 9.85 0 0012.04 2zm5.8 14.11c-.24.68-1.4 1.3-1.93 1.38-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.11-4.85-4.3-.14-.19-1.16-1.54-1.16-2.94s.72-2.09.98-2.38c.24-.27.53-.34.71-.34l.51.01c.16.01.38-.06.6.46.24.57.79 1.97.86 2.11.07.14.11.31.02.5-.09.19-.14.31-.27.48-.14.16-.29.36-.41.49-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.19-.27.37-.22.62-.13.26.09 1.62.77 1.9.91.28.14.46.21.53.32.07.12.07.65-.17 1.33z"/></svg>
+    </a>
+  </div>
+
 </main>
 
 <footer>
@@ -618,6 +686,9 @@ const i18n = {
     chReset:'إعادة المحاولة', chCorrect:'إجابة صحيحة! ✅', chWrong:'مش صحيحة، بس محاولة كويسة 💪',
     tier1Title:'🎉 مبروك! فتحت خصم', tier1Desc:'وريه لمعلمك عشان يفعّله ليك:',
     tier2Title:'🏆 إنجاز كامل! فتحت خصم أكبر', tier2Desc:'حليت كل التحديات صح — عاش! وريه لمعلمك:',
+    contactTag:'// تواصل معايا', contactTitle:'عندك سؤال؟ كلّمني على طول',
+    contactSub:'لو محتاج تفسير حاجة، أو عندك استفسار عن الكورس أو التسجيل، تقدر تتواصل معايا مباشرة على واتساب.',
+    contactBtn:'تواصل عبر واتساب',
     challenges:[
       { q:'أكمل التسلسل: 2, 4, 8, 16, ؟', code:null, options:['18','20','32','24'], correct:2 },
       { q:'لو 5 مكن تصنع 5 قطع في 5 دقايق، محتاجين كام دقيقة عشان 100 مكنة تصنع 100 قطعة؟', code:null, options:['100 دقيقة','20 دقيقة','5 دقايق','50 دقيقة'], correct:2 },
@@ -666,6 +737,9 @@ const i18n = {
     chReset:'Try again', chCorrect:'Correct! ✅', chWrong:'Not quite, good attempt though 💪',
     tier1Title:'🎉 Nice! You unlocked a discount', tier1Desc:'Show this to your teacher to activate it:',
     tier2Title:'🏆 Full clear! Bigger discount unlocked', tier2Desc:'You solved every challenge — awesome! Show this to your teacher:',
+    contactTag:'// get in touch', contactTitle:'Have a question? Message me directly',
+    contactSub:"Need something explained, or have a question about the course or registration? Reach me directly on WhatsApp.",
+    contactBtn:'Contact via WhatsApp',
     challenges:[
       { q:'Complete the sequence: 2, 4, 8, 16, ?', code:null, options:['18','20','32','24'], correct:2 },
       { q:'If 5 machines make 5 widgets in 5 minutes, how many minutes for 100 machines to make 100 widgets?', code:null, options:['100 minutes','20 minutes','5 minutes','50 minutes'], correct:2 },
@@ -738,8 +812,10 @@ function renderCourse(id){
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen loading="lazy"></iframe>
         </div>
+        <div id="exam-container"></div>
       </div>
     `;
+    buildExam();
   } else {
     body.innerHTML = `
       <div class="locked-panel" style="width:100%;">
@@ -758,6 +834,224 @@ document.querySelectorAll('.file-item').forEach(item=>{
     renderCourse(item.dataset.course);
   });
 });
+
+/* ---------- الامتحان: امتحان الجزء الأول ---------- */
+const EXAM_STORAGE_KEY = 'as_exam1_state';
+const TEACHER_WHATSAPP = '201064666228';
+
+const examData = {
+  mcq: [
+    { q:'1. النموذج الذي يوضح كيف يعالج الحاسوب البيانات هو:',
+      options:['معالجة ← مخرجات ← مدخلات','مدخلات ← معالجة ← مخرجات','مخرجات ← مدخلات ← معالجة','لا يوجد نموذج ثابت'], correct:1 },
+    { q:'2. الخطوات المرتبة والمحددة بدقة لحل مشكلة معينة تسمى:',
+      options:['برنامج','لغة برمجة','خوارزمية','متغير'], correct:2 },
+    { q:'3. سبب تحويل الخوارزمية إلى برنامج هو:',
+      options:['لتصبح أجمل شكلاً','ليفهمها الحاسوب وينفذها','لحفظها فقط دون تنفيذ','لا يوجد سبب محدد'], correct:1 },
+    { q:'4. عبارة print("Hello") تقوم بـ:',
+      options:['تخزين كلمة Hello في متغير','طلب إدخال من المستخدم','عرض كلمة Hello على الشاشة','حذف كلمة Hello'], correct:2 },
+    { q:'5. من مميزات الـ IDE عن الـ Text Editor:',
+      options:['لا يمكنه حفظ الملفات','يجمع بين كتابة الكود وتشغيله واكتشاف أخطائه','لا يدعم أي لغة برمجة','أبطأ دائمًا من Text Editor'], correct:1 },
+  ],
+  blanks: [
+    { q:'1. الحاسوب يعالج البيانات وفق النموذج: مدخلات ← ____ ← مخرجات.', accepted:['معالجة'] },
+    { q:'2. ____ هي اللغة الوسيطة التي نستخدمها للتواصل مع الحاسوب.', accepted:['لغة البرمجة','لغة برمجة','البرمجة'] },
+    { q:'3. في بايثون، القيمة "Ahmed" من نوع البيانات ____.', accepted:['نصي','نص','string','str'] },
+    { q:'4. عبارة age = 16 تعني تخزين القيمة 16 في المتغير ____.', accepted:['age'] },
+    { q:'5. ____ هو المكان الذي يُكتب فيه الكود داخل Google Colab.', accepted:['الخلية','خلية','cell'] },
+  ],
+  essays: [
+    'عرّف الخوارزمية، واذكر مثالاً واحدًا عليها من حياتك اليومية.',
+    'اشرح الفرق بين البرنامج ولغة البرمجة.',
+    'اذكر سببين لاختيار بايثون كلغة برمجة للمبتدئين.',
+    'ما هو المتغير؟ ولماذا نستخدمه في البرمجة بدلاً من كتابة القيم مباشرة؟',
+    'اذكر نوعين من أنواع البيانات الأساسية في بايثون، مع مثال لكل نوع.',
+  ]
+};
+
+function normalizeArabic(str){
+  return (str || '')
+    .trim().toLowerCase()
+    .replace(/[أإآ]/g,'ا')
+    .replace(/ى/g,'ي')
+    .replace(/ة/g,'ه')
+    .replace(/[\u064B-\u065F\u0670]/g,'') // remove diacritics
+    .replace(/\s+/g,' ');
+}
+
+function loadExamState(){
+  try{
+    const raw = localStorage.getItem(EXAM_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : { mcq:{}, blanks:{}, essays:{}, submitted:false };
+  }catch(e){ return { mcq:{}, blanks:{}, essays:{}, submitted:false }; }
+}
+function saveExamState(state){
+  try{ localStorage.setItem(EXAM_STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+function buildExam(){
+  const container = document.getElementById('exam-container');
+  if(!container) return;
+  const state = loadExamState();
+
+  container.innerHTML = `
+    <div class="exam-card">
+      <div class="exam-head">
+        <h3>📝 امتحان الجزء الأول</h3>
+        <p class="exam-sub">ملخص الحصة التأسيسية — البرمجة والذكاء الاصطناعي — 15 سؤال، الدرجة الكلية 20</p>
+      </div>
+
+      <div id="exam-score-banner"></div>
+
+      <div class="exam-part">
+        <div class="exam-part-title">// أولاً: اختر الإجابة الصحيحة (5 درجات)</div>
+        <div id="exam-mcq"></div>
+      </div>
+
+      <div class="exam-part">
+        <div class="exam-part-title">// ثانيًا: أكمل الفراغ (5 درجات)</div>
+        <div id="exam-blanks"></div>
+      </div>
+
+      <div class="exam-part">
+        <div class="exam-part-title">// ثالثًا: أسئلة مقالية (10 درجات)</div>
+        <div id="exam-essays"></div>
+      </div>
+
+      <button class="btn-primary" id="exam-submit-btn" style="width:100%; justify-content:center;">تسليم الامتحان</button>
+
+      <div id="exam-whatsapp-cta"></div>
+    </div>
+  `;
+
+  const mcqWrap = document.getElementById('exam-mcq');
+  examData.mcq.forEach((item, idx) => {
+    const picked = state.mcq[idx];
+    const q = document.createElement('div');
+    q.className = 'exam-q';
+    q.innerHTML = `
+      <div class="exam-q-text">${item.q}</div>
+      ${item.options.map((opt,i)=>`
+        <label class="exam-opt" data-mcq="${idx}" data-opt="${i}">
+          <input type="radio" name="mcq-${idx}" value="${i}" ${picked===i?'checked':''} ${state.submitted?'disabled':''}>
+          <span>${opt}</span>
+        </label>
+      `).join('')}
+    `;
+    mcqWrap.appendChild(q);
+  });
+
+  const blanksWrap = document.getElementById('exam-blanks');
+  examData.blanks.forEach((item, idx) => {
+    const val = state.blanks[idx] || '';
+    const q = document.createElement('div');
+    q.className = 'exam-q';
+    q.innerHTML = `
+      <div class="exam-q-text">${item.q}</div>
+      <input type="text" class="exam-blank-input" data-blank="${idx}" value="${val.replace(/"/g,'&quot;')}" ${state.submitted?'disabled':''}>
+      <div class="exam-answer-reveal" id="blank-reveal-${idx}" style="display:none;"></div>
+    `;
+    blanksWrap.appendChild(q);
+  });
+
+  const essaysWrap = document.getElementById('exam-essays');
+  examData.essays.forEach((qText, idx) => {
+    const val = state.essays[idx] || '';
+    const q = document.createElement('div');
+    q.className = 'exam-q';
+    q.innerHTML = `
+      <div class="exam-q-text">${idx+1}. ${qText}</div>
+      <textarea class="exam-essay-input" data-essay="${idx}" ${state.submitted?'disabled':''}>${val}</textarea>
+      ${state.submitted ? '<div class="exam-essay-note">✓ تم استلام إجابتك — هيتم مراجعتها من المعلم.</div>' : ''}
+    `;
+    essaysWrap.appendChild(q);
+  });
+
+  // save answers as the student types/selects (only if not yet submitted)
+  if(!state.submitted){
+    mcqWrap.querySelectorAll('input[type="radio"]').forEach(inp => {
+      inp.addEventListener('change', () => {
+        const s = loadExamState();
+        s.mcq[inp.closest('.exam-opt').dataset.mcq] = parseInt(inp.value, 10);
+        saveExamState(s);
+      });
+    });
+    blanksWrap.querySelectorAll('.exam-blank-input').forEach(inp => {
+      inp.addEventListener('input', () => {
+        const s = loadExamState();
+        s.blanks[inp.dataset.blank] = inp.value;
+        saveExamState(s);
+      });
+    });
+    essaysWrap.querySelectorAll('.exam-essay-input').forEach(inp => {
+      inp.addEventListener('input', () => {
+        const s = loadExamState();
+        s.essays[inp.dataset.essay] = inp.value;
+        saveExamState(s);
+      });
+    });
+
+    document.getElementById('exam-submit-btn').addEventListener('click', submitExam);
+  } else {
+    document.getElementById('exam-submit-btn').style.display = 'none';
+    revealExamResults(state);
+  }
+}
+
+function submitExam(){
+  const state = loadExamState();
+  state.submitted = true;
+  saveExamState(state);
+  buildExam();
+  document.getElementById('exam-container').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function revealExamResults(state){
+  let mcqScore = 0, blankScore = 0;
+
+  examData.mcq.forEach((item, idx) => {
+    const picked = state.mcq[idx];
+    const correct = picked === item.correct;
+    if(correct) mcqScore++;
+    document.querySelectorAll(`.exam-opt[data-mcq="${idx}"]`).forEach(opt => {
+      const optIdx = parseInt(opt.dataset.opt, 10);
+      if(optIdx === item.correct) opt.classList.add('correct');
+      else if(optIdx === picked) opt.classList.add('wrong');
+    });
+  });
+
+  examData.blanks.forEach((item, idx) => {
+    const val = normalizeArabic(state.blanks[idx] || '');
+    const correct = item.accepted.some(a => normalizeArabic(a) === val);
+    if(correct) blankScore++;
+    const input = document.querySelector(`.exam-blank-input[data-blank="${idx}"]`);
+    input.classList.add(correct ? 'correct' : 'wrong');
+    if(!correct){
+      const reveal = document.getElementById(`blank-reveal-${idx}`);
+      reveal.style.display = 'block';
+      reveal.textContent = 'الإجابة الصحيحة: ' + item.accepted[0];
+    }
+  });
+
+  const totalAuto = mcqScore + blankScore;
+  const banner = document.getElementById('exam-score-banner');
+  banner.innerHTML = `
+    <div class="exam-score-banner">
+      <div class="big">${totalAuto} / 10</div>
+      <p>دي درجتك في أسئلة الاختيار وإكمال الفراغ (10 درجات). الأسئلة المقالية (10 درجات) هيراجعها معلمك بنفسه.</p>
+    </div>
+  `;
+
+  const waMsg = encodeURIComponent('مرحبًا أستاذ الحسن، سلّمت امتحان الجزء الأول وعندي سؤال في الأسئلة المقالية.');
+  document.getElementById('exam-whatsapp-cta').innerHTML = `
+    <div class="exam-whatsapp-cta">
+      <p>معندكش مشكلة، لو مش فاهم حاجة في الأسئلة المقالية أو عايز تتأكد من إجابتك، كلّم المعلم على طول 👇</p>
+      <a class="whatsapp-btn" href="https://wa.me/${TEACHER_WHATSAPP}?text=${waMsg}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.004c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.85 9.85 0 0012.04 2zm5.8 14.11c-.24.68-1.4 1.3-1.93 1.38-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.11-4.85-4.3-.14-.19-1.16-1.54-1.16-2.94s.72-2.09.98-2.38c.24-.27.53-.34.71-.34l.51.01c.16.01.38-.06.6.46.24.57.79 1.97.86 2.11.07.14.11.31.02.5-.09.19-.14.31-.27.48-.14.16-.29.36-.41.49-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.19-.27.37-.22.62-.13.26.09 1.62.77 1.9.91.28.14.46.21.53.32.07.12.07.65-.17 1.33z"/></svg>
+        <span>كلّم المعلم على واتساب</span>
+      </a>
+    </div>
+  `;
+}
 
 /* ---------- challenge zone ---------- */
 const CHALLENGE_STORAGE_KEY = 'as_challenge_answers';
@@ -906,6 +1200,11 @@ gateConfirm.addEventListener('click', ()=>{
   } else {
     gformFrame.src = GOOGLE_FORM_URL;
   }
+
+  const floatingWa = document.getElementById('floating-whatsapp');
+  window.addEventListener('scroll', () => {
+    floatingWa.style.display = window.scrollY > 500 ? 'flex' : 'none';
+  });
 })();
 </script>
 
