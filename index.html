@@ -184,52 +184,6 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
   .trust-item img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block;}
   .trust-cap{padding:12px 14px; font-size:12.5px; color:var(--text-muted); line-height:1.6;}
 
-  /* CHALLENGE ZONE */
-  .score-panel{
-    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
-    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px;
-    padding:18px 22px; margin-bottom:26px;
-  }
-  .score-bar-track{flex:1; height:10px; background:var(--bg-elevated-2); border-radius:6px; overflow:hidden; min-width:140px;}
-  .score-bar-fill{height:100%; background:linear-gradient(90deg,var(--purple-bright),var(--teal)); transition:width .5s ease; width:0%;}
-  .score-num{font-size:15px;}
-
-  .challenge-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
-  .challenge-card{
-    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px; padding:22px;
-    display:flex; flex-direction:column;
-  }
-  .challenge-card .ch-num{font-family:'JetBrains Mono'; font-size:11px; color:var(--teal); margin-bottom:10px; unicode-bidi:isolate;}
-  .challenge-card .ch-q{font-size:14.5px; line-height:1.8; margin-bottom:14px;}
-  .challenge-card pre{
-    background:var(--bg-elevated-2); border:1px solid var(--border); border-radius:8px;
-    padding:12px 14px; font-family:'JetBrains Mono'; font-size:12.5px; color:var(--mint);
-    overflow-x:auto; margin:0 0 14px; direction:ltr; text-align:left; line-height:1.6;
-  }
-  .opt-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:auto;}
-  .opt-btn{
-    font-size:13px; border:1px solid var(--border); background:var(--bg-elevated-2); color:var(--text);
-    padding:10px 12px; border-radius:8px; cursor:pointer; transition:all .15s; text-align:center; font-family:inherit;
-  }
-  .opt-btn:hover:not(:disabled){border-color:var(--teal); color:var(--mint);}
-  .opt-btn.correct{background:rgba(63,191,106,0.15); border-color:#3fbf6a; color:#8be3a6;}
-  .opt-btn.wrong{background:rgba(229,85,90,0.15); border-color:#e5555a; color:#f0999c;}
-  .opt-btn:disabled{cursor:default;}
-  .ch-feedback{font-size:12.5px; margin-top:10px; font-weight:600; min-height:16px;}
-  .ch-feedback.ok{color:#3fbf6a;}
-  .ch-feedback.bad{color:#e5555a;}
-
-  .discount-panel{
-    margin-top:24px;
-    background:linear-gradient(135deg, rgba(78,31,111,0.3), rgba(69,169,169,0.22));
-    border:1px solid var(--teal); border-radius:16px; padding:30px; text-align:center;
-  }
-  .discount-code{
-    font-size:22px; font-weight:700; letter-spacing:0.15em; color:var(--mint);
-    background:var(--bg-elevated-2); display:inline-block; padding:10px 22px;
-    border-radius:8px; margin-top:12px; direction:ltr;
-  }
-
   .explorer{
     display:grid; grid-template-columns:290px 1fr; border:1px solid var(--border);
     border-radius:14px; overflow:hidden; background:var(--bg-elevated);
@@ -259,6 +213,18 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
   .file-item .ext{color:var(--purple-bright); font-family:'JetBrains Mono'; font-size:12px; unicode-bidi:isolate;}
   .file-item.active .ext{color:var(--mint);}
   .file-item .lock-icon{margin-inline-start:auto; font-size:12px;}
+
+  .unit-folder{border-top:1px solid var(--border);}
+  .folder-header{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 18px; font-family:'JetBrains Mono'; font-size:12.5px;
+    color:var(--text-muted); cursor:pointer; user-select:none;
+  }
+  .folder-header:hover{color:var(--text);}
+  .folder-arrow{display:inline-block; width:10px; transition:transform .15s; unicode-bidi:isolate;}
+  .folder-title{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .unit-lessons{display:none;}
+  .lesson-item{padding-inline-start:34px !important; font-size:13px;}
   .file-item .title-txt{flex:1;}
 
   .explorer-panel{padding:0; display:flex; flex-direction:column;}
@@ -336,6 +302,26 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
   .whatsapp-btn:hover{transform:translateY(-2px);}
   .whatsapp-btn svg{width:20px; height:20px; flex-shrink:0;}
 
+  /* SUBSCRIPTION */
+  .pricing-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-bottom:32px;}
+  .pricing-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:16px;
+    padding:28px; text-align:center;
+  }
+  .pricing-card.featured{border-color:var(--teal); background:linear-gradient(160deg, rgba(69,169,169,0.1), var(--bg-elevated));}
+  .pricing-badge{font-size:13px; color:var(--teal); margin-bottom:14px; unicode-bidi:isolate;}
+  .pricing-amount{margin-bottom:20px;}
+  .pricing-amount .num{font-family:'JetBrains Mono'; font-size:38px; font-weight:700; color:var(--text);}
+  .pricing-amount .unit{font-size:14px; color:var(--text-muted); margin-inline-start:6px;}
+  .pricing-card .whatsapp-btn{width:100%; justify-content:center;}
+  .sub-instructions{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px; padding:26px 28px;
+  }
+  .sub-instructions h3{font-size:16px; margin-bottom:16px;}
+  .sub-instructions ol{margin:0; padding-inline-start:20px; display:flex; flex-direction:column; gap:12px;}
+  .sub-instructions li{font-size:14px; line-height:1.8; color:var(--text-muted); padding-inline-start:4px;}
+  .sub-instructions li::marker{color:var(--teal); font-family:'JetBrains Mono'; font-weight:700;}
+
   .floating-whatsapp{
     position:fixed; bottom:22px; inset-inline-end:22px; z-index:60;
     width:56px; height:56px; border-radius:50%; background:#25D366;
@@ -368,6 +354,19 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
     backdrop-filter:blur(4px);
     display:flex; align-items:center; justify-content:center; padding:20px;
   }
+  #homework-overlay{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(4,5,15,0.72);
+    backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  #homework-overlay.open{display:flex;}
+  .quick-action-card{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:14px;
+    padding:22px 26px; margin-top:24px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .quick-action-card p{margin:0; color:var(--text-muted); font-size:13.5px; max-width:420px; line-height:1.7;}
   .gate-card{
     position:relative;
     width:100%; max-width:520px; background:var(--bg-elevated);
@@ -418,8 +417,7 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
     .nav-links{display:none;}
     .values{grid-template-columns:repeat(2,1fr);}
     .trust-gallery{grid-template-columns:repeat(2,1fr);}
-    .challenge-grid{grid-template-columns:1fr;}
-    .opt-grid{grid-template-columns:1fr;}
+    .pricing-grid{grid-template-columns:1fr;}
     .explorer{grid-template-columns:1fr;}
     .explorer-sidebar{display:flex; overflow-x:auto; border-inline-end:none; border-bottom:1px solid var(--border); padding:12px;}
     .folder-label{display:none;}
@@ -463,6 +461,19 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
   </div>
 </div>
 
+<!-- HOMEWORK SUBMISSION MODAL (optional, dismissible) -->
+<div id="homework-overlay">
+  <div class="gate-card">
+    <button type="button" class="gate-close" id="homework-close" aria-label="close">✕</button>
+    <div class="gate-title" data-i18n="hwTitle">تسليم الواجب</div>
+    <div class="gate-sub" data-i18n="hwSub">املأ النموذج التالي عشان تسلّم واجبك، وبعد ما تخلّص تقدر تقفل الشاشة دي عادي.</div>
+
+    <div class="form-embed-wrap">
+      <iframe id="hwform-frame" src="" title="Homework submission form" loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
 <div id="site-content">
 
 <header>
@@ -478,7 +489,8 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
     <div class="nav-links">
       <a href="#about" data-i18n="navAbout">عن المعلم</a>
       <a href="#courses" data-i18n="navCourses">الكورسات</a>
-      <a href="#challenges" data-i18n="navChallenges">🎮 تحديات</a>
+      <a href="#" id="nav-homework" data-i18n="navHomework">📮 تسليم الواجب</a>
+      <a href="#subscribe" data-i18n="navSubscribe">💳 الاشتراك</a>
       <a href="#contact" data-i18n="navContact">تواصل</a>
     </div>
     <div class="nav-right">
@@ -570,27 +582,16 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
     <div class="section-head">
       <div class="section-tag" data-i18n="coursesTag">// كورسات المادة</div>
       <h2 class="section-title" data-i18n="coursesTitle">اختر كورس وابدأ التعلّم</h2>
-      <p class="section-sub" data-i18n="coursesSub">الكورس التأسيسي متاح الآن. باقي كورسات المنهج هتفتح تباعًا أول ما تكون جاهزة.</p>
+      <p class="section-sub" data-i18n="coursesSub">الكورس التأسيسي متاح دلوقتي بالفيديو والامتحان، وتحت كل وحدة من المنهج هتلاقي دروسها — الدروس اللي لسه معملتلهاش فيديو هتظهر "المحتوى هيترفع قريبًا" لحد ما ترفعه.</p>
     </div>
 
     <div class="explorer">
-      <div class="explorer-sidebar">
+      <div class="explorer-sidebar" id="explorer-sidebar">
         <div class="folder-label mono" data-i18n="folderLabel">📁 courses/</div>
         <div class="file-item active" data-course="c1">
           <span class="title-txt" data-i18n="c1_file">الكورس_التأسيسي</span><span class="ext">.py</span>
         </div>
-        <div class="file-item locked" data-course="c2">
-          <span class="title-txt" data-i18n="c2_file">أساسيات_البرمجة</span><span class="ext">.py</span>
-          <span class="lock-icon">🔒</span>
-        </div>
-        <div class="file-item locked" data-course="c3">
-          <span class="title-txt" data-i18n="c3_file">مقدمة_في_الذكاء_الاصطناعي</span><span class="ext">.ai</span>
-          <span class="lock-icon">🔒</span>
-        </div>
-        <div class="file-item locked" data-course="c4">
-          <span class="title-txt" data-i18n="c4_file">مشاريع_تطبيقية</span><span class="ext">.ipynb</span>
-          <span class="lock-icon">🔒</span>
-        </div>
+        <div id="unit-tree"></div>
       </div>
 
       <div class="explorer-panel">
@@ -601,31 +602,16 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
         </div>
       </div>
     </div>
-  </section>
 
-  <section class="section" id="challenges">
-    <div class="section-head">
-      <div class="section-tag" data-i18n="chTag">// وقفة تحدي</div>
-      <h2 class="section-title" data-i18n="chTitle">جرّب عقلك: ألغاز وتحديات برمجة</h2>
-      <p class="section-sub" data-i18n="chSub">حل التحديات دي وشوف تقدر توصل لخصم عندك ولا لأ 😉</p>
-    </div>
-
-    <div class="score-panel">
-      <div style="display:flex; align-items:center; gap:12px; flex:1; min-width:200px;">
-        <span class="mono score-num"><span id="score-num">0</span>/5</span>
-        <div class="score-bar-track"><div class="score-bar-fill" id="score-bar" style="width:0%;"></div></div>
+    <div class="quick-action-card">
+      <div>
+        <h3 style="font-size:16px; margin-bottom:6px;" data-i18n="hwCardTitle">خلّصت واجبك؟</h3>
+        <p data-i18n="hwCardSub">سلّمه من هنا مباشرة عن طريق نموذج جوجل، من غير ما تسيب الصفحة.</p>
       </div>
-      <button class="btn-ghost" id="challenge-reset" style="padding:9px 16px; font-size:13px;" data-i18n="chReset">إعادة المحاولة</button>
-    </div>
-
-    <div class="challenge-grid" id="challenge-grid"></div>
-
-    <div class="discount-panel" id="discount-panel" style="display:none;">
-      <div id="discount-title" style="font-size:19px; font-weight:700;"></div>
-      <p id="discount-desc" style="color:var(--text-muted); margin:8px 0 4px;"></p>
-      <div class="discount-code mono" id="discount-code"></div>
+      <button class="btn-primary" id="nav-homework-2" data-i18n="hwCardBtn">📮 تسليم الواجب</button>
     </div>
   </section>
+
 
   <section class="section">
     <div class="cta-strip">
@@ -634,6 +620,43 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
         <p data-i18n="ctaSub">ابدأ الكورس التأسيسي دلوقتي، وباقي كورسات المنهج هتضاف تباعًا.</p>
       </div>
       <a class="btn-primary" href="#courses" data-i18n="ctaBtn">./ابدأ_الآن</a>
+    </div>
+  </section>
+
+  <section class="section" id="subscribe">
+    <div class="section-head">
+      <div class="section-tag" data-i18n="subTag">// اشتراك المنصة</div>
+      <h2 class="section-title" data-i18n="subTitle">اشترك وتابع كل حصصك أول بأول</h2>
+      <p class="section-sub" data-i18n="subSub">اختر صفك الدراسي، حوّل قيمة الاشتراك، وابعتلي صورة التحويل — وهفعّلك في نفس اليوم.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-badge mono" data-i18n="tier1Name">أولى ثانوي</div>
+        <div class="pricing-amount"><span class="num">150</span> <span class="unit" data-i18n="perMonth">جنيه / شهر</span></div>
+        <a class="btn-primary whatsapp-btn" id="sub-wa-1" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.004c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.85 9.85 0 0012.04 2zm5.8 14.11c-.24.68-1.4 1.3-1.93 1.38-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.11-4.85-4.3-.14-.19-1.16-1.54-1.16-2.94s.72-2.09.98-2.38c.24-.27.53-.34.71-.34l.51.01c.16.01.38-.06.6.46.24.57.79 1.97.86 2.11.07.14.11.31.02.5-.09.19-.14.31-.27.48-.14.16-.29.36-.41.49-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.19-.27.37-.22.62-.13.26.09 1.62.77 1.9.91.28.14.46.21.53.32.07.12.07.65-.17 1.33z"/></svg>
+          <span data-i18n="subBtnText">حوّلت الاشتراك</span>
+        </a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge mono" data-i18n="tier2Name">تانيه ثانوي</div>
+        <div class="pricing-amount"><span class="num">250</span> <span class="unit" data-i18n="perMonth">جنيه / شهر</span></div>
+        <a class="btn-primary whatsapp-btn" id="sub-wa-2" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.004c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.85 9.85 0 0012.04 2zm5.8 14.11c-.24.68-1.4 1.3-1.93 1.38-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.11-4.85-4.3-.14-.19-1.16-1.54-1.16-2.94s.72-2.09.98-2.38c.24-.27.53-.34.71-.34l.51.01c.16.01.38-.06.6.46.24.57.79 1.97.86 2.11.07.14.11.31.02.5-.09.19-.14.31-.27.48-.14.16-.29.36-.41.49-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.19-.27.37-.22.62-.13.26.09 1.62.77 1.9.91.28.14.46.21.53.32.07.12.07.65-.17 1.33z"/></svg>
+          <span data-i18n="subBtnText">حوّلت الاشتراك</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-instructions">
+      <h3 data-i18n="subStepsTitle">إزاي تشترك؟</h3>
+      <ol>
+        <li data-i18n-html="subStep1">حوّل قيمة الاشتراك المناسبة لصفك على الرقم <span class="mono" dir="ltr" style="unicode-bidi:isolate;">01064666228</span> عن طريق Vodafone Cash أو InstaPay.</li>
+        <li data-i18n="subStep2">خد لقطة شاشة (Screenshot) لعملية التحويل.</li>
+        <li data-i18n="subStep3">دوس على زرار "حوّلت الاشتراك" جنب صفك الدراسي، وابعتلي صورة التحويل على واتساب.</li>
+        <li data-i18n="subStep4">هفعّل اشتراكك بمجرد ما أستلم الصورة — عادةً في نفس اليوم.</li>
+      </ol>
     </div>
   </section>
 
@@ -683,7 +706,20 @@ const i18n = {
     gateSub:'املأ النموذج التالي، وبعد ما تخلّص اضغط على "تم التسجيل" تحت عشان ترجع للموقع.',
     gateSubmit:'تم التسجيل، رجوع للموقع', gateNote:'بياناتك بتتحفظ مباشرة في نموذج جوجل الخاص بمعلمك، ومش بتتشارك مع أي طرف تاني.',
     titlebarPath:'~/alhassan-shereif/برمجة_وذكاء_اصطناعي',
-    navAbout:'عن المعلم', navCourses:'الكورسات', navContact:'تواصل', navCta:'./ابدأ_التعلم', navRegister:'تسجيل البيانات', navRegistered:'بياناتك متسجلة ✓', navChallenges:'🎮 تحديات',
+    navAbout:'عن المعلم', navCourses:'الكورسات', navContact:'تواصل', navCta:'./ابدأ_التعلم', navRegister:'تسجيل البيانات', navRegistered:'بياناتك متسجلة ✓',
+    navHomework:'📮 تسليم الواجب', navSubscribe:'💳 الاشتراك',
+    hwTitle:'تسليم الواجب', hwSub:'املأ النموذج التالي عشان تسلّم واجبك، وبعد ما تخلّص تقدر تقفل الشاشة دي عادي.',
+    hwCardTitle:'خلّصت واجبك؟', hwCardSub:'سلّمه من هنا مباشرة عن طريق نموذج جوجل، من غير ما تسيب الصفحة.', hwCardBtn:'📮 تسليم الواجب',
+    subTag:'// اشتراك المنصة', subTitle:'اشترك وتابع كل حصصك أول بأول',
+    subSub:'اختر صفك الدراسي، حوّل قيمة الاشتراك، وابعتلي صورة التحويل — وهفعّلك في نفس اليوم.',
+    tier1Name:'أولى ثانوي', tier2Name:'تانيه ثانوي', perMonth:'جنيه / شهر', subBtnText:'حوّلت الاشتراك',
+    subStepsTitle:'إزاي تشترك؟',
+    subStep1:'حوّل قيمة الاشتراك المناسبة لصفك على الرقم <span class="mono" dir="ltr" style="unicode-bidi:isolate;">01064666228</span> عن طريق Vodafone Cash أو InstaPay.',
+    subStep2:'خد لقطة شاشة (Screenshot) لعملية التحويل.',
+    subStep3:'دوس على زرار "حوّلت الاشتراك" جنب صفك الدراسي، وابعتلي صورة التحويل على واتساب.',
+    subStep4:'هفعّل اشتراكك بمجرد ما أستلم الصورة — عادةً في نفس اليوم.',
+    subWaMsg1:'أستاذ الحسن، حوّلت مبلغ اشتراك أولى ثانوي (150 جنيه) الشهري، هبعتلك صورة التحويل دلوقتي.',
+    subWaMsg2:'أستاذ الحسن، حوّلت مبلغ اشتراك تانيه ثانوي (250 جنيه) الشهري، هبعتلك صورة التحويل دلوقتي.',
     heroEyebrow:'learn.build.grow()',
     heroTitle:'تعلّم <span class="grad">البرمجة والذكاء الاصطناعي</span> بطريقة عملية وممتعة',
     curriculumTag:'مادة البرمجة والذكاء الاصطناعي — المرحلة الثانوية',
@@ -700,25 +736,13 @@ const i18n = {
     trustBadge:'بالتعاون مع أكاديمية المستقبل — Since 2018',
     g1Cap:'ختام كورس البرمجة — الجروب الأول', g2Cap:'خريجين الجروب الأول من طلاب البرمجة',
     g3Cap:'فعاليات كورس البرمجة — فرع المنيا', g4Cap:'من داخل المحاضرات العملية للبرمجة',
-    chTag:'// وقفة تحدي', chTitle:'جرّب عقلك: ألغاز وتحديات برمجة',
-    chSub:'حل التحديات دي وشوف تقدر توصل لخصم عندك ولا لأ 😉',
-    chReset:'إعادة المحاولة', chCorrect:'إجابة صحيحة! ✅', chWrong:'مش صحيحة، بس محاولة كويسة 💪',
-    tier1Title:'🎉 مبروك! فتحت خصم', tier1Desc:'وريه لمعلمك عشان يفعّله ليك:',
-    tier2Title:'🏆 إنجاز كامل! فتحت خصم أكبر', tier2Desc:'حليت كل التحديات صح — عاش! وريه لمعلمك:',
     contactTag:'// تواصل معايا', contactTitle:'عندك سؤال؟ كلّمني على طول',
     contactSub:'لو محتاج تفسير حاجة، أو عندك استفسار عن الكورس أو التسجيل، تقدر تتواصل معايا مباشرة على واتساب.',
     contactBtn:'تواصل عبر واتساب',
-    challenges:[
-      { q:'أكمل التسلسل: 2, 4, 8, 16, ؟', code:null, options:['18','20','32','24'], correct:2 },
-      { q:'لو 5 مكن تصنع 5 قطع في 5 دقايق، محتاجين كام دقيقة عشان 100 مكنة تصنع 100 قطعة؟', code:null, options:['100 دقيقة','20 دقيقة','5 دقايق','50 دقيقة'], correct:2 },
-      { q:'ايه ناتج الكود ده؟', code:'x = 5\ny = x + 3\nx = y - 2\nprint(x)', options:['5','6','7','8'], correct:1 },
-      { q:'فين المشكلة في الكود ده؟', code:'for i in range(5)\n    print(i)', options:['ناقص نقطتين (:) بعد range(5)','لازم نستخدم while بدل for','الأقواس غلط','مفيش مشكلة'], correct:0 },
-      { q:'لو X = True و Y = False، ناتج (X and Y) ايه؟', code:null, options:['True','False','Error','1'], correct:1 },
-    ],
     coursesTag:'// كورسات المادة', coursesTitle:'اختر كورس وابدأ التعلّم',
-    coursesSub:'الكورس التأسيسي متاح الآن. باقي كورسات المنهج هتفتح تباعًا أول ما تكون جاهزة.',
+    coursesSub:'الكورس التأسيسي متاح دلوقتي بالفيديو والامتحان، وتحت كل وحدة من المنهج هتلاقي دروسها — الدروس اللي لسه معملتلهاش فيديو هتظهر "المحتوى هيترفع قريبًا" لحد ما ترفعه.',
     folderLabel:'📁 courses/',
-    c1_file:'الكورس_التأسيسي', c2_file:'أساسيات_البرمجة', c3_file:'مقدمة_في_الذكاء_الاصطناعي', c4_file:'مشاريع_تطبيقية',
+    c1_file:'الكورس_التأسيسي',
     ctaTitle:'جاهز تكتب أول سطر كود؟', ctaSub:'ابدأ الكورس التأسيسي دلوقتي، وباقي كورسات المنهج هتضاف تباعًا.', ctaBtn:'./ابدأ_الآن',
     fHome:'// الرئيسية', fAbout:'// عن المعلم', fCourses:'// الكورسات', fAdmin:'// لوحة المعلم', fNote:'© 2026 م. الحسن شريف — تعلّم. ابنِ. تطوّر.',
     lockedTitle:'هذا الكورس قريبًا', lockedDesc:'هذا الجزء من مادة البرمجة والذكاء الاصطناعي هيتفتح قريبًا. تابع الكورس التأسيسي لحد ما يتاح.',
@@ -734,7 +758,20 @@ const i18n = {
     gateSub:"Fill in the form below, then tap \"I've registered\" to return to the site.",
     gateSubmit:"I've registered — back to site", gateNote:"Your info goes straight into your teacher's Google Form and isn't shared with anyone else.",
     titlebarPath:'~/alhassan-shereif/programming_and_ai',
-    navAbout:'About', navCourses:'Courses', navContact:'Contact', navCta:'./start_learning', navRegister:'Register', navRegistered:'Registered ✓', navChallenges:'🎮 Challenges',
+    navAbout:'About', navCourses:'Courses', navContact:'Contact', navCta:'./start_learning', navRegister:'Register', navRegistered:'Registered ✓',
+    navHomework:'📮 Submit Homework', navSubscribe:'💳 Subscribe',
+    hwTitle:'Submit Homework', hwSub:"Fill in the form below to submit your homework — once you're done, you can just close this.",
+    hwCardTitle:'Finished your homework?', hwCardSub:'Submit it right here through a Google Form, without leaving the page.', hwCardBtn:'📮 Submit Homework',
+    subTag:'// platform subscription', subTitle:'Subscribe and follow every session as it drops',
+    subSub:"Pick your grade, transfer the subscription amount, and send me the payment screenshot — I'll activate you the same day.",
+    tier1Name:'1st Secondary', tier2Name:'2nd Secondary', perMonth:'EGP / month', subBtnText:'I paid — notify',
+    subStepsTitle:'How to subscribe',
+    subStep1:'Transfer the subscription amount for your grade to <span class="mono" dir="ltr" style="unicode-bidi:isolate;">01064666228</span> via Vodafone Cash or InstaPay.',
+    subStep2:'Take a screenshot of the transfer.',
+    subStep3:'Tap the "I paid — notify" button next to your grade, and send me the screenshot on WhatsApp.',
+    subStep4:"I'll activate your subscription as soon as I receive it — usually the same day.",
+    subWaMsg1:'Mr. Alhassan, I transferred the 1st Secondary subscription (150 EGP) for this month, sending the payment screenshot now.',
+    subWaMsg2:'Mr. Alhassan, I transferred the 2nd Secondary subscription (250 EGP) for this month, sending the payment screenshot now.',
     heroEyebrow:'learn.build.grow()',
     heroTitle:'Learn <span class="grad">Programming & AI</span> the hands-on way',
     curriculumTag:'Programming & AI Curriculum — Secondary School',
@@ -751,25 +788,13 @@ const i18n = {
     trustBadge:'In partnership with Future Academy — Since 2018',
     g1Cap:'Completion of the first programming course group', g2Cap:'Graduates of the first student group',
     g3Cap:'Programming course activities — Minya branch', g4Cap:'Inside the hands-on programming lectures',
-    chTag:'// challenge break', chTitle:'Test your brain: logic puzzles & coding challenges',
-    chSub:"Solve these and see if you can unlock a discount 😉",
-    chReset:'Try again', chCorrect:'Correct! ✅', chWrong:'Not quite, good attempt though 💪',
-    tier1Title:'🎉 Nice! You unlocked a discount', tier1Desc:'Show this to your teacher to activate it:',
-    tier2Title:'🏆 Full clear! Bigger discount unlocked', tier2Desc:'You solved every challenge — awesome! Show this to your teacher:',
     contactTag:'// get in touch', contactTitle:'Have a question? Message me directly',
     contactSub:"Need something explained, or have a question about the course or registration? Reach me directly on WhatsApp.",
     contactBtn:'Contact via WhatsApp',
-    challenges:[
-      { q:'Complete the sequence: 2, 4, 8, 16, ?', code:null, options:['18','20','32','24'], correct:2 },
-      { q:'If 5 machines make 5 widgets in 5 minutes, how many minutes for 100 machines to make 100 widgets?', code:null, options:['100 minutes','20 minutes','5 minutes','50 minutes'], correct:2 },
-      { q:'What does this code print?', code:'x = 5\ny = x + 3\nx = y - 2\nprint(x)', options:['5','6','7','8'], correct:1 },
-      { q:"What's wrong with this code?", code:'for i in range(5)\n    print(i)', options:['Missing a colon (:) after range(5)','Should use while instead of for','The parentheses are wrong','Nothing is wrong'], correct:0 },
-      { q:'If X = True and Y = False, what is (X and Y)?', code:null, options:['True','False','Error','1'], correct:1 },
-    ],
     coursesTag:'// curriculum courses', coursesTitle:'Pick a course, start learning',
-    coursesSub:'The Foundational Course is available now. The rest of the curriculum unlocks as it becomes ready.',
+    coursesSub:'The Foundational Course is available now with its video and exam. Each curriculum unit below lists its lessons — any lesson without a video yet will show "content coming soon" until it\'s uploaded.',
     folderLabel:'📁 courses/',
-    c1_file:'foundational_course', c2_file:'programming_basics', c3_file:'intro_to_ai', c4_file:'applied_projects',
+    c1_file:'foundational_course',
     ctaTitle:'Ready to write your first line of code?', ctaSub:'Start the Foundational Course now — more modules are on the way.', ctaBtn:'./start_now',
     fHome:'// home', fAbout:'// about', fCourses:'// courses', fAdmin:'// teacher panel', fNote:'© 2026 Eng. Alhassan Shereif — Learn. Build. Grow.',
     lockedTitle:'This course is coming soon', lockedDesc:'This part of the Programming & AI curriculum will unlock soon. Continue the Foundational Course until then.',
@@ -782,7 +807,7 @@ const i18n = {
 };
 
 let currentLang = 'ar';
-let unlockedCourse = 'c1';
+let activeLessonId = null;
 
 function applyI18n(lang){
   currentLang = lang;
@@ -800,14 +825,21 @@ function applyI18n(lang){
     if(dict[key] !== undefined) el.innerHTML = dict[key];
   });
 
-  renderCourse(unlockedCourse === 'c1' ? 'c1' : unlockedCourse);
-  renderChallenges();
+  buildUnitTree();
+  if(activeLessonId){
+    renderLesson(activeLessonId);
+  } else {
+    renderCourse();
+  }
   const w = document.getElementById('welcome-name');
   if(w){
     w.textContent = dict.welcomeGeneric;
   }
   const so = document.getElementById('signout-btn');
   if(so) so.textContent = dict.signOut;
+
+  document.getElementById('sub-wa-1').href = 'https://wa.me/201064666228?text=' + encodeURIComponent(dict.subWaMsg1);
+  document.getElementById('sub-wa-2').href = 'https://wa.me/201064666228?text=' + encodeURIComponent(dict.subWaMsg2);
 }
 
 document.getElementById('lang-toggle').addEventListener('click', ()=>{
@@ -815,44 +847,156 @@ document.getElementById('lang-toggle').addEventListener('click', ()=>{
 });
 
 /* ---------- course explorer ---------- */
-function renderCourse(id){
+function renderCourse(){
   const dict = i18n[currentLang];
-  const filenameMap = {c1: dict.c1_file+'.py', c2: dict.c2_file+'.py', c3: dict.c3_file+'.ai', c4: dict.c4_file+'.ipynb'};
-  document.getElementById('panel-filename').textContent = filenameMap[id] || filenameMap.c1;
+  document.getElementById('panel-filename').textContent = dict.c1_file + '.py';
 
   const body = document.getElementById('panel-body');
+  body.innerHTML = `
+    <div style="width:100%;">
+      <h3 style="margin-bottom:14px;">${dict.courseTitle}</h3>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/Wki93VD5ZD4" title="${dict.courseTitle}"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div id="exam-container"></div>
+    </div>
+  `;
+  buildExam();
+}
 
-  if(id === 'c1'){
+function setActiveFileItem(el){
+  document.querySelectorAll('.file-item').forEach(f=>f.classList.remove('active'));
+  el.classList.add('active');
+}
+
+document.querySelector('[data-course="c1"]').addEventListener('click', function(){
+  activeLessonId = null;
+  setActiveFileItem(this);
+  renderCourse();
+});
+
+/* ---------- curriculum units & lessons ---------- */
+const curriculum = [
+  { id:'u1', title_ar:'الوحدة 1: تكنولوجيا المعلومات والمجتمع', title_en:'Unit 1: Information Technology & Society', lessons:[
+      { id:'1-1', title_ar:'تطور تكنولوجيا المعلومات والتحول الاجتماعي', title_en:'Evolution of IT & Social Transformation' },
+      { id:'1-2', title_ar:'كيف يعمل الذكاء الاصطناعي', title_en:'How Artificial Intelligence Works' },
+      { id:'1-3', title_ar:'الذكاء الاصطناعي في الحياة اليومية والصناعة', title_en:'AI in Daily Life & Industry' },
+      { id:'1-4', title_ar:'القضايا الأخلاقية للذكاء الاصطناعي', title_en:'Ethical Issues of AI' },
+  ]},
+  { id:'u2', title_ar:'الوحدة 2: الأمن السيبراني', title_en:'Unit 2: Cybersecurity', lessons:[
+      { id:'2-1', title_ar:'تقنيات التشفير والمصادقة', title_en:'Encryption & Authentication Techniques' },
+      { id:'2-2', title_ar:'تصميم أمن الشبكات', title_en:'Network Security Design' },
+      { id:'2-3', title_ar:'الاستجابة للحوادث وإدارة المخاطر', title_en:'Incident Response & Risk Management' },
+  ]},
+  { id:'u3', title_ar:'الوحدة 3: تطبيقات الويب', title_en:'Unit 3: Web Applications', lessons:[
+      { id:'3-1', title_ar:'البنية العامة لتطبيقات الويب', title_en:'General Architecture of Web Apps' },
+      { id:'3-2', title_ar:'طرق الاتصال في تطبيقات الويب', title_en:'Communication Methods in Web Apps' },
+      { id:'3-3', title_ar:'أساسيات تكنولوجيا الواجهة الأمامية', title_en:'Frontend Technology Basics' },
+  ]},
+  { id:'u4', title_ar:'الوحدة 4: تصميم الويب والوسائط', title_en:'Unit 4: Web & Media Design', lessons:[
+      { id:'4-1', title_ar:'أنواع الوسائط وخصائصها', title_en:'Media Types & Characteristics' },
+      { id:'4-2', title_ar:'تصميم المعلومات وتجربة المستخدم للمواقع', title_en:'Information Design & UX for Websites' },
+      { id:'4-3', title_ar:'أساليب تقييم المواقع الإلكترونية', title_en:'Website Evaluation Methods' },
+      { id:'4-4', title_ar:'عملية التحسين التكراري للمواقع', title_en:'Iterative Website Improvement Process' },
+  ]},
+];
+
+/* Videos are supplied by the teacher through a published Google Sheet (see setup notes).
+   Paste the sheet's published CSV link below once it's ready — until then, every lesson
+   simply shows a "coming soon" state, so nothing breaks if it's left empty. */
+const LESSON_SHEET_CSV_URL = '';
+let lessonVideos = {};
+
+async function loadLessonVideos(){
+  if(!LESSON_SHEET_CSV_URL) return;
+  try{
+    const sep = LESSON_SHEET_CSV_URL.includes('?') ? '&' : '?';
+    const res = await fetch(LESSON_SHEET_CSV_URL + sep + 'cachebust=' + Date.now());
+    const text = await res.text();
+    const rows = text.trim().split('\n').map(r => r.split(',').map(c => c.trim().replace(/^"|"$/g, '')));
+    const header = rows[0].map(h => h.toLowerCase());
+    const idIdx = header.indexOf('lesson_id');
+    const ytIdx = header.indexOf('youtube_id');
+    if(idIdx === -1 || ytIdx === -1) return;
+    for(let i = 1; i < rows.length; i++){
+      const row = rows[i];
+      if(row[idIdx] && row[ytIdx]) lessonVideos[row[idIdx].trim()] = row[ytIdx].trim();
+    }
+  }catch(e){ console.warn('Could not load lesson videos sheet', e); }
+}
+
+function buildUnitTree(){
+  const wrap = document.getElementById('unit-tree');
+  const dict = i18n[currentLang];
+  wrap.innerHTML = curriculum.map(u => `
+    <div class="unit-folder">
+      <div class="folder-header" data-unit="${u.id}">
+        <span class="folder-arrow mono">▸</span> 📁 <span class="folder-title">${currentLang === 'ar' ? u.title_ar : u.title_en}</span>
+      </div>
+      <div class="unit-lessons" id="lessons-${u.id}">
+        ${u.lessons.map(l => `
+          <div class="file-item lesson-item" data-lesson="${l.id}">
+            <span class="title-txt mono" style="unicode-bidi:isolate;">${l.id}</span>
+            <span class="title-txt" style="flex:1; margin-inline-start:8px;">${currentLang === 'ar' ? l.title_ar : l.title_en}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  wrap.querySelectorAll('.folder-header').forEach(h => {
+    h.addEventListener('click', () => {
+      const panel = document.getElementById('lessons-' + h.dataset.unit);
+      const isOpen = panel.style.display === 'block';
+      panel.style.display = isOpen ? 'none' : 'block';
+      h.querySelector('.folder-arrow').textContent = isOpen ? '▸' : '▾';
+    });
+  });
+
+  wrap.querySelectorAll('.lesson-item').forEach(item => {
+    item.addEventListener('click', () => {
+      activeLessonId = item.dataset.lesson;
+      setActiveFileItem(item);
+      renderLesson(activeLessonId);
+    });
+    if(item.dataset.lesson === activeLessonId) item.classList.add('active');
+  });
+}
+
+function renderLesson(lessonId){
+  const dict = i18n[currentLang];
+  const lesson = curriculum.flatMap(u => u.lessons).find(l => l.id === lessonId);
+  if(!lesson) return;
+
+  const title = currentLang === 'ar' ? lesson.title_ar : lesson.title_en;
+  document.getElementById('panel-filename').textContent = lessonId + '.py';
+
+  const body = document.getElementById('panel-body');
+  const ytId = lessonVideos[lessonId];
+
+  if(ytId){
     body.innerHTML = `
       <div style="width:100%;">
-        <h3 style="margin-bottom:14px;">${dict.courseTitle}</h3>
+        <h3 style="margin-bottom:14px;">${lessonId} — ${title}</h3>
         <div class="video-wrap">
-          <iframe src="https://www.youtube.com/embed/Wki93VD5ZD4" title="${dict.courseTitle}"
+          <iframe src="https://www.youtube.com/embed/${ytId}" title="${title}"
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen loading="lazy"></iframe>
         </div>
-        <div id="exam-container"></div>
       </div>
     `;
-    buildExam();
   } else {
     body.innerHTML = `
       <div class="locked-panel" style="width:100%;">
-        <span class="big-lock">🔒</span>
-        <h3 style="margin-bottom:10px;">${dict.lockedTitle}</h3>
-        <p style="max-width:420px; margin:0 auto; line-height:1.8;">${dict.lockedDesc}</p>
+        <span class="big-lock">📂</span>
+        <h3 style="margin-bottom:10px;">${title}</h3>
+        <p style="max-width:420px; margin:0 auto; line-height:1.8;">${dict.emptyDesc}</p>
       </div>
     `;
   }
 }
-
-document.querySelectorAll('.file-item').forEach(item=>{
-  item.addEventListener('click', ()=>{
-    document.querySelectorAll('.file-item').forEach(f=>f.classList.remove('active'));
-    item.classList.add('active');
-    renderCourse(item.dataset.course);
-  });
-});
 
 /* ---------- الامتحان: امتحان الجزء الأول ---------- */
 const EXAM_STORAGE_KEY = 'as_exam1_state';
@@ -1072,112 +1216,6 @@ function revealExamResults(state){
   `;
 }
 
-/* ---------- challenge zone ---------- */
-const CHALLENGE_STORAGE_KEY = 'as_challenge_answers';
-const DISCOUNT_CODE_TIER1 = 'LOGIC10';
-const DISCOUNT_CODE_TIER2 = 'LOGIC20';
-
-function loadChallengeState(){
-  try{
-    const raw = localStorage.getItem(CHALLENGE_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  }catch(e){ return {}; }
-}
-function saveChallengeState(state){
-  try{ localStorage.setItem(CHALLENGE_STORAGE_KEY, JSON.stringify(state)); }catch(e){}
-}
-
-function renderChallenges(){
-  const dict = i18n[currentLang];
-  const grid = document.getElementById('challenge-grid');
-  const state = loadChallengeState();
-
-  grid.innerHTML = dict.challenges.map((ch, idx) => `
-    <div class="challenge-card" data-idx="${idx}">
-      <div class="ch-num mono">CHALLENGE_${idx+1}</div>
-      <div class="ch-q">${ch.q}</div>
-      ${ch.code ? `<pre>${ch.code}</pre>` : ''}
-      <div class="opt-grid">
-        ${ch.options.map((opt,i)=>`<button class="opt-btn" data-opt="${i}">${opt}</button>`).join('')}
-      </div>
-      <div class="ch-feedback" id="feedback-${idx}"></div>
-    </div>
-  `).join('');
-
-  dict.challenges.forEach((ch, idx) => {
-    const card = grid.querySelector(`[data-idx="${idx}"]`);
-    const buttons = card.querySelectorAll('.opt-btn');
-    const feedback = card.querySelector(`#feedback-${idx}`);
-    const answered = state[idx];
-
-    if(answered !== undefined){
-      buttons.forEach((btn, i) => {
-        btn.disabled = true;
-        if(i === ch.correct) btn.classList.add('correct');
-        else if(i === answered.picked && !answered.correct) btn.classList.add('wrong');
-      });
-      feedback.textContent = answered.correct ? dict.chCorrect : dict.chWrong;
-      feedback.className = 'ch-feedback ' + (answered.correct ? 'ok' : 'bad');
-    }
-
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const picked = parseInt(btn.dataset.opt, 10);
-        const correct = picked === ch.correct;
-        const s = loadChallengeState();
-        s[idx] = { picked, correct };
-        saveChallengeState(s);
-
-        buttons.forEach((b, i) => {
-          b.disabled = true;
-          if(i === ch.correct) b.classList.add('correct');
-          else if(i === picked && !correct) b.classList.add('wrong');
-        });
-        feedback.textContent = correct ? dict.chCorrect : dict.chWrong;
-        feedback.className = 'ch-feedback ' + (correct ? 'ok' : 'bad');
-
-        updateScore();
-      });
-    });
-  });
-
-  updateScore();
-}
-
-function updateScore(){
-  const dict = i18n[currentLang];
-  const state = loadChallengeState();
-  const total = dict.challenges.length;
-  const correctCount = Object.values(state).filter(a => a.correct).length;
-
-  document.getElementById('score-num').textContent = correctCount;
-  document.getElementById('score-bar').style.width = (correctCount / total * 100) + '%';
-
-  const panel = document.getElementById('discount-panel');
-  const titleEl = document.getElementById('discount-title');
-  const descEl = document.getElementById('discount-desc');
-  const codeEl = document.getElementById('discount-code');
-
-  if(correctCount >= total){
-    panel.style.display = 'block';
-    titleEl.textContent = dict.tier2Title;
-    descEl.textContent = dict.tier2Desc;
-    codeEl.textContent = DISCOUNT_CODE_TIER2;
-  } else if(correctCount >= 3){
-    panel.style.display = 'block';
-    titleEl.textContent = dict.tier1Title;
-    descEl.textContent = dict.tier1Desc;
-    codeEl.textContent = DISCOUNT_CODE_TIER1;
-  } else {
-    panel.style.display = 'none';
-  }
-}
-
-document.getElementById('challenge-reset').addEventListener('click', () => {
-  saveChallengeState({});
-  renderChallenges();
-});
-
 /* ---------- registration gate (Google Form embed, mandatory) ---------- */
 const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdruxN9rIK0Jm2L9dU4TFOZ6vzf_HIJLzF4cUgyd0HZp7cFaA/viewform?embedded=true';
 
@@ -1208,8 +1246,31 @@ gateConfirm.addEventListener('click', ()=>{
   showSite();
 });
 
+/* ---------- homework submission modal (optional, dismissible) ---------- */
+const HOMEWORK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdfnYbARW7Cs41XVzADOirjrLfeKvw3I_ivbHGV2V6tB6lCPg/viewform?embedded=true';
+const homeworkOverlay = document.getElementById('homework-overlay');
+const hwformFrame = document.getElementById('hwform-frame');
+let hwIframeLoaded = false;
+
+function openHomeworkModal(e){
+  if(e) e.preventDefault();
+  if(!hwIframeLoaded){
+    hwformFrame.src = HOMEWORK_FORM_URL;
+    hwIframeLoaded = true;
+  }
+  homeworkOverlay.classList.add('open');
+}
+function closeHomeworkModal(){ homeworkOverlay.classList.remove('open'); }
+
+document.getElementById('nav-homework').addEventListener('click', openHomeworkModal);
+document.getElementById('nav-homework-2').addEventListener('click', openHomeworkModal);
+document.getElementById('homework-close').addEventListener('click', closeHomeworkModal);
+homeworkOverlay.addEventListener('click', (e)=>{ if(e.target === homeworkOverlay) closeHomeworkModal(); });
+document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeHomeworkModal(); });
+
 /* ---------- init ---------- */
-(function init(){
+(async function init(){
+  await loadLessonVideos();
   applyI18n('ar');
   let alreadyRegistered = false;
   try{ alreadyRegistered = localStorage.getItem('as_registered') === 'true'; }catch(e){}
