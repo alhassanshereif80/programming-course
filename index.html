@@ -276,9 +276,7 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
   }
   .mini-input:focus{outline:none; border-color:var(--teal);}
   .video-wrap{position:relative; width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:#000;}
-  .video-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
-  .video-wrap .shield-top{position:absolute; top:0; left:0; right:0; height:14%; z-index:5; cursor:default;}
-  .video-wrap .shield-corner{position:absolute; bottom:0; right:0; width:20%; height:14%; z-index:5; cursor:default;}
+  .video-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0; pointer-events:none;}
   .video-poster{
     position:absolute; inset:0; cursor:pointer;
     background:
@@ -296,6 +294,40 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
   }
   .video-play-btn svg{width:26px; height:26px; fill:#fff; margin-inline-start:3px;}
   .video-poster:hover .video-play-btn{transform:scale(1.08);}
+
+  .video-click-catcher{position:absolute; inset:0; z-index:4; cursor:pointer;}
+  .custom-video-controls{
+    position:absolute; bottom:0; left:0; right:0; z-index:6; direction:ltr;
+    display:flex; align-items:center; gap:6px;
+    padding:8px 10px; background:linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  }
+  .cvc-btn{
+    background:transparent; border:none; cursor:pointer; padding:5px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .cvc-btn svg{width:19px; height:19px; fill:#fff;}
+  .cvc-skip{position:relative;}
+  .cvc-skip svg{width:22px; height:22px;}
+  .cvc-skip .cvc-skip-label{
+    position:absolute; top:53%; left:50%; transform:translate(-50%,-50%);
+    font-family:'JetBrains Mono'; font-size:8px; font-weight:700; color:#fff; pointer-events:none;
+  }
+  .cvc-speed{
+    font-family:'JetBrains Mono'; font-size:11px; font-weight:700; color:#fff;
+    background:rgba(255,255,255,0.12); border:none; border-radius:6px;
+    padding:4px 8px; cursor:pointer; flex-shrink:0; white-space:nowrap;
+  }
+  .cvc-speed:hover{background:rgba(255,255,255,0.2);}
+  .cvc-seek-track{
+    position:relative; flex:1; height:5px; background:rgba(255,255,255,0.25);
+    border-radius:4px; cursor:pointer;
+  }
+  .cvc-seek-fill{position:absolute; inset-inline-start:0; top:0; height:100%; width:0%; background:var(--teal); border-radius:4px;}
+  .cvc-seek-handle{
+    position:absolute; top:50%; inset-inline-start:0%; width:12px; height:12px;
+    background:var(--mint); border-radius:50%; transform:translate(-50%,-50%); pointer-events:none;
+  }
+  .cvc-time{font-family:'JetBrains Mono'; font-size:10.5px; color:#fff; white-space:nowrap; flex-shrink:0;}
 
   .whatsapp-btn{
     display:inline-flex; align-items:center; gap:10px; background:#25D366; color:#fff; font-weight:700;
@@ -712,6 +744,7 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
 
 </div><!-- /site-content -->
 
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 /* ---------- i18n ---------- */
 const i18n = {
@@ -905,7 +938,7 @@ const sectionObserver = new IntersectionObserver((entries) => {
   if(el) sectionObserver.observe(el);
 });
 
-/* ---------- shielded video embed (click-to-load poster, no YouTube facade shown) ---------- */
+/* ---------- shielded video embed (custom controls via YouTube IFrame API, controls=0) ---------- */
 function buildShieldedVideo(videoId, title){
   const safeTitle = String(title).replace(/"/g, '&quot;');
   return `
@@ -919,23 +952,146 @@ function buildShieldedVideo(videoId, title){
   `;
 }
 
+let ytPlayerCounter = 0;
+window.__pendingYTPlayers = [];
+function onYouTubeIframeAPIReady(){
+  window.__pendingYTPlayers.forEach(fn => fn());
+  window.__pendingYTPlayers = [];
+}
+
 function initShieldedVideos(container){
   container.querySelectorAll('.video-wrap[data-video-id]').forEach(wrap => {
     const poster = wrap.querySelector('.video-poster');
     if(!poster) return;
-    poster.addEventListener('click', () => {
-      const videoId = wrap.dataset.videoId;
-      const title = wrap.dataset.videoTitle;
-      const params = 'autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&fs=0&disablekb=1&playsinline=1&controls=1';
-      wrap.innerHTML = `
-        <iframe src="https://www.youtube-nocookie.com/embed/${videoId}?${params}" title="${title}"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen></iframe>
-        <div class="shield-top" oncontextmenu="return false;"></div>
-        <div class="shield-corner" oncontextmenu="return false;"></div>
-      `;
-    });
+    poster.addEventListener('click', () => mountShieldedPlayer(wrap), { once: true });
   });
+}
+
+function mountShieldedPlayer(wrap){
+  const videoId = wrap.dataset.videoId;
+  ytPlayerCounter++;
+  const playerId = 'ytp-' + ytPlayerCounter;
+
+  wrap.innerHTML = `
+    <div id="${playerId}"></div>
+    <div class="video-click-catcher"></div>
+    <div class="custom-video-controls">
+      <button type="button" class="cvc-btn cvc-playpause" aria-label="play/pause">
+        <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+        <svg class="icon-play" viewBox="0 0 24 24" style="display:none;"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button type="button" class="cvc-btn cvc-skip cvc-back10" aria-label="back 10s">
+        <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        <span class="cvc-skip-label">10</span>
+      </button>
+      <div class="cvc-seek-track">
+        <div class="cvc-seek-fill"></div>
+        <div class="cvc-seek-handle"></div>
+      </div>
+      <button type="button" class="cvc-btn cvc-skip cvc-fwd10" aria-label="forward 10s">
+        <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
+        <span class="cvc-skip-label">10</span>
+      </button>
+      <span class="cvc-time mono">0:00 / 0:00</span>
+      <button type="button" class="cvc-speed" aria-label="playback speed">1x</button>
+    </div>
+  `;
+
+  function createPlayer(){
+    new YT.Player(playerId, {
+      videoId: videoId,
+      host: 'https://www.youtube-nocookie.com',
+      playerVars: {
+        controls: 0, rel: 0, modestbranding: 1, iv_load_policy: 3,
+        disablekb: 1, fs: 0, playsinline: 1, autoplay: 1,
+        origin: window.location.origin
+      },
+      events: {
+        onReady: (e) => { e.target.playVideo(); setupCustomControls(wrap, e.target); }
+      }
+    });
+  }
+
+  if(window.YT && window.YT.Player) createPlayer();
+  else window.__pendingYTPlayers.push(createPlayer);
+}
+
+function setupCustomControls(wrap, player){
+  const btn = wrap.querySelector('.cvc-playpause');
+  const iconPlay = wrap.querySelector('.icon-play');
+  const iconPause = wrap.querySelector('.icon-pause');
+  const seekTrack = wrap.querySelector('.cvc-seek-track');
+  const seekFill = wrap.querySelector('.cvc-seek-fill');
+  const seekHandle = wrap.querySelector('.cvc-seek-handle');
+  const timeEl = wrap.querySelector('.cvc-time');
+  const clickCatcher = wrap.querySelector('.video-click-catcher');
+  const back10Btn = wrap.querySelector('.cvc-back10');
+  const fwd10Btn = wrap.querySelector('.cvc-fwd10');
+  const speedBtn = wrap.querySelector('.cvc-speed');
+
+  const speeds = [1, 1.5, 2];
+  let speedIdx = 0;
+  speedBtn.addEventListener('click', () => {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    const rate = speeds[speedIdx];
+    player.setPlaybackRate(rate);
+    speedBtn.textContent = rate + 'x';
+  });
+
+  back10Btn.addEventListener('click', () => {
+    const cur = player.getCurrentTime();
+    player.seekTo(Math.max(0, cur - 10), true);
+  });
+  fwd10Btn.addEventListener('click', () => {
+    const cur = player.getCurrentTime();
+    const dur = player.getDuration();
+    player.seekTo(Math.min(dur, cur + 10), true);
+  });
+
+  function fmt(s){
+    s = Math.max(0, Math.floor(s || 0));
+    const m = Math.floor(s / 60), sec = s % 60;
+    return m + ':' + String(sec).padStart(2, '0');
+  }
+
+  function togglePlay(){
+    const state = player.getPlayerState();
+    if(state === 1) player.pauseVideo(); else player.playVideo();
+  }
+  btn.addEventListener('click', togglePlay);
+  clickCatcher.addEventListener('click', togglePlay);
+
+  let dragging = false;
+  function seekTo(clientX){
+    const rect = seekTrack.getBoundingClientRect();
+    let ratio = (clientX - rect.left) / rect.width;
+    ratio = Math.max(0, Math.min(1, ratio));
+    const duration = player.getDuration();
+    if(duration > 0) player.seekTo(ratio * duration, true);
+    seekFill.style.width = (ratio * 100) + '%';
+    seekHandle.style.insetInlineStart = (ratio * 100) + '%';
+  }
+  seekTrack.addEventListener('click', (e) => seekTo(e.clientX));
+  seekTrack.addEventListener('touchstart', (e) => { dragging = true; seekTo(e.touches[0].clientX); });
+  document.addEventListener('touchmove', (e) => { if(dragging) seekTo(e.touches[0].clientX); });
+  document.addEventListener('touchend', () => { dragging = false; });
+
+  const pollId = setInterval(() => {
+    if(!document.body.contains(wrap)){ clearInterval(pollId); return; }
+    try{
+      const cur = player.getCurrentTime();
+      const dur = player.getDuration();
+      if(dur > 0 && !dragging){
+        const pct = (cur / dur * 100);
+        seekFill.style.width = pct + '%';
+        seekHandle.style.insetInlineStart = pct + '%';
+        timeEl.textContent = fmt(cur) + ' / ' + fmt(dur);
+      }
+      const state = player.getPlayerState();
+      iconPlay.style.display = state === 1 ? 'none' : 'block';
+      iconPause.style.display = state === 1 ? 'block' : 'none';
+    }catch(e){}
+  }, 400);
 }
 
 /* ---------- course explorer ---------- */
