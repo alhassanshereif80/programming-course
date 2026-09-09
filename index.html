@@ -485,7 +485,7 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
 
     <form id="hw-form">
       <div class="field" style="margin-bottom:14px;">
-        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelName">الاسم بالكامل</label>
+        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelName">الاسم ثلاثي</label>
         <input type="text" id="hw-name" class="mini-input" required>
       </div>
       <div class="field" style="margin-bottom:14px;">
@@ -493,20 +493,26 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
         <input type="email" id="hw-email" class="mini-input" dir="ltr" required>
       </div>
       <div class="field" style="margin-bottom:14px;">
-        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelId">رقم/كود الطالب</label>
-        <input type="text" id="hw-studentid" class="mini-input">
+        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelCode">كود الطالب</label>
+        <input type="text" id="hw-code" class="mini-input" required>
       </div>
       <div class="field" style="margin-bottom:14px;">
         <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelLesson">اسم الدرس / الواجب</label>
         <input type="text" id="hw-lesson" class="mini-input">
       </div>
       <div class="field" style="margin-bottom:18px;">
-        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelFile">ملف الواجب</label>
-        <input type="file" id="hw-file" class="mini-input" required>
+        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelFile">ملفات الواجب (يمكن اختيار أكتر من ملف)</label>
+        <input type="file" id="hw-file" class="mini-input" required multiple>
       </div>
       <button type="submit" class="btn-primary gate-submit" id="hw-submit-btn" data-i18n="hwSubmitBtn">إرسال الواجب</button>
       <div id="hw-status" style="margin-top:12px; font-size:13px; text-align:center;"></div>
     </form>
+
+    <div id="hw-closed-state" style="display:none; text-align:center; padding:20px 0;">
+      <span style="font-size:30px; display:block; margin-bottom:14px;">🔒</span>
+      <h3 style="font-size:17px; margin-bottom:10px;" data-i18n="hwClosedTitle">استلام الواجبات مقفول دلوقتي</h3>
+      <p style="color:var(--text-muted); font-size:13.5px; line-height:1.8;" data-i18n="hwClosedDesc">هيتفتح استلام الواجبات تاني قريبًا. تابع إعلانات المعلم.</p>
+    </div>
   </div>
 </div>
 
@@ -749,10 +755,12 @@ const i18n = {
     navHomework:'📮 تسليم الواجب', navSubscribe:'💳 الاشتراك',
     hwTitle:'تسليم الواجب', hwSub:'املأ النموذج التالي عشان تسلّم واجبك، وبعد ما تخلّص تقدر تقفل الشاشة دي عادي.',
     hwCardTitle:'خلّصت واجبك؟', hwCardSub:'سلّمه من هنا مباشرة، وهيتحفظ في الدرايف بتاعنا على طول.', hwCardBtn:'📮 تسليم الواجب',
-    hwLabelName:'الاسم بالكامل', hwLabelEmail:'البريد الإلكتروني', hwLabelId:'رقم/كود الطالب', hwLabelLesson:'اسم الدرس / الواجب', hwLabelFile:'ملف الواجب',
+    hwLabelName:'الاسم ثلاثي', hwLabelEmail:'البريد الإلكتروني', hwLabelCode:'كود الطالب', hwLabelLesson:'اسم الدرس / الواجب', hwLabelFile:'ملفات الواجب (يمكن اختيار أكتر من ملف)',
     hwSubmitBtn:'إرسال الواجب', hwUploading:'جارِ رفع الواجب... من فضلك متقفلش الصفحة.',
     hwSuccess:'تم استلام واجبك بنجاح ✅', hwError:'حصل خطأ أثناء الرفع، جرّب تاني.',
-    hwMissingFields:'من فضلك املأ كل الحقول وارفع الملف.', hwFileTooBig:'الملف كبير جدًا (الحد الأقصى 20 ميجا).',
+    hwMissingFields:'من فضلك املأ كل الحقول وارفع ملف واحد على الأقل.', hwFileTooBig:'واحد أو أكتر من الملفات كبير جدًا (الحد الأقصى 20 ميجا للملف).',
+    hwTooManyFiles:'أقصى عدد ملفات مسموح بيه 15 ملف.',
+    hwClosedTitle:'استلام الواجبات مقفول دلوقتي', hwClosedDesc:'هيتفتح استلام الواجبات تاني قريبًا. تابع إعلانات المعلم.',
     hwNotConfigured:'رفع الواجبات لسه بيتظبط، جرّب تاني بعد شوية.',
     subTag:'// اشتراك المنصة', subTitle:'اشترك وتابع كل حصصك أول بأول',
     subSub:'اختر صفك الدراسي، حوّل قيمة الاشتراك، وابعتلي صورة التحويل — وهفعّلك في نفس اليوم.',
@@ -811,10 +819,12 @@ const i18n = {
     navHomework:'📮 Submit Homework', navSubscribe:'💳 Subscribe',
     hwTitle:'Submit Homework', hwSub:"Fill in the form below to submit your homework — once you're done, you can just close this.",
     hwCardTitle:'Finished your homework?', hwCardSub:"Submit it right here — it'll be saved straight to our Drive.", hwCardBtn:'📮 Submit Homework',
-    hwLabelName:'Full name', hwLabelEmail:'Email address', hwLabelId:'Student ID / code', hwLabelLesson:'Lesson / assignment name', hwLabelFile:'Homework file',
+    hwLabelName:'Full name (three parts)', hwLabelEmail:'Email address', hwLabelCode:'Student code', hwLabelLesson:'Lesson / assignment name', hwLabelFile:'Homework files (you can select more than one)',
     hwSubmitBtn:'Submit homework', hwUploading:"Uploading your homework... please don't close this page.",
     hwSuccess:'Your homework was received ✅', hwError:'Something went wrong during upload, please try again.',
-    hwMissingFields:'Please fill in every field and attach a file.', hwFileTooBig:'File is too large (20MB max).',
+    hwMissingFields:'Please fill in every field and attach at least one file.', hwFileTooBig:'One or more files are too large (20MB max per file).',
+    hwTooManyFiles:'You can upload a maximum of 15 files.',
+    hwClosedTitle:'Homework submission is closed right now', hwClosedDesc:"It'll reopen soon — check your teacher's announcements.",
     hwNotConfigured:'Homework submission is still being set up, please try again soon.',
     subTag:'// platform subscription', subTitle:'Subscribe and follow every session as it drops',
     subSub:"Pick your grade, transfer the subscription amount, and send me the payment screenshot — I'll activate you the same day.",
@@ -1225,13 +1235,39 @@ gateConfirm.addEventListener('click', ()=>{
 /* Paste your deployed Apps Script Web App URL here once it's ready (ends in /exec). */
 const HOMEWORK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwff4C6rmiPndkxXIPxTOzxwbqbkrKyPRAQYpYvA056N8SMZjYvkp_uBaf1kTvouoqpTA/exec';
 
+/* Paste the published CSV link for your homework on/off switch sheet here once it's ready.
+   Required: a column named "status" with one data row containing "open" or "closed". */
+const HOMEWORK_STATUS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeAkcJXSVtfjusA-RTeylNPliJKvAmigCWxsBi9iA3Z_jrhCsVsq1OgswY_hW6daXiR6zO7FlTqeDz/pub?gid=0&single=true&output=csv';
+let homeworkOpen = true;
+
+async function loadHomeworkStatus(){
+  if(!HOMEWORK_STATUS_CSV_URL) return;
+  try{
+    const { header, rows } = await fetchCsvRows(HOMEWORK_STATUS_CSV_URL);
+    const statusIdx = header.indexOf('status');
+    if(statusIdx === -1 || !rows[1]) return;
+    const value = (rows[1][statusIdx] || '').trim().toLowerCase();
+    if(value === 'open' || value === 'closed'){
+      homeworkOpen = value === 'open';
+    }
+  }catch(e){ console.warn('Could not load homework status sheet', e); }
+}
+
 const homeworkOverlay = document.getElementById('homework-overlay');
 const hwForm = document.getElementById('hw-form');
+const hwClosedState = document.getElementById('hw-closed-state');
 const hwStatus = document.getElementById('hw-status');
 const hwSubmitBtn = document.getElementById('hw-submit-btn');
 
 function openHomeworkModal(e){
   if(e) e.preventDefault();
+  if(homeworkOpen){
+    hwForm.style.display = 'block';
+    hwClosedState.style.display = 'none';
+  } else {
+    hwForm.style.display = 'none';
+    hwClosedState.style.display = 'block';
+  }
   homeworkOverlay.classList.add('open');
 }
 function closeHomeworkModal(){ homeworkOverlay.classList.remove('open'); }
@@ -1257,18 +1293,24 @@ hwForm.addEventListener('submit', async (e) => {
 
   const name = document.getElementById('hw-name').value.trim();
   const email = document.getElementById('hw-email').value.trim();
-  const studentId = document.getElementById('hw-studentid').value.trim();
+  const studentCode = document.getElementById('hw-code').value.trim();
   const lesson = document.getElementById('hw-lesson').value.trim();
   const fileInput = document.getElementById('hw-file');
-  const file = fileInput.files[0];
+  const files = Array.from(fileInput.files);
 
-  if(!name || !email || !file){
+  if(!name || !email || !studentCode || files.length === 0){
     hwStatus.style.color = '#e5555a';
     hwStatus.textContent = dict.hwMissingFields;
     return;
   }
 
-  if(file.size > 20 * 1024 * 1024){
+  if(files.length > 15){
+    hwStatus.style.color = '#e5555a';
+    hwStatus.textContent = dict.hwTooManyFiles;
+    return;
+  }
+
+  if(files.some(f => f.size > 20 * 1024 * 1024)){
     hwStatus.style.color = '#e5555a';
     hwStatus.textContent = dict.hwFileTooBig;
     return;
@@ -1279,17 +1321,20 @@ hwForm.addEventListener('submit', async (e) => {
   hwStatus.textContent = dict.hwUploading;
 
   try{
-    const base64 = await fileToBase64(file);
+    const filesPayload = await Promise.all(files.map(async (f) => ({
+      fileName: f.name,
+      mimeType: f.type || 'application/octet-stream',
+      fileData: await fileToBase64(f)
+    })));
+
     const res = await fetch(HOMEWORK_SCRIPT_URL, {
       method: 'POST',
       body: JSON.stringify({
         studentName: name,
         studentEmail: email,
-        studentId: studentId,
+        studentCode: studentCode,
         lesson: lesson,
-        fileName: file.name,
-        mimeType: file.type || 'application/octet-stream',
-        fileData: base64
+        files: filesPayload
       })
     });
     const result = await res.json();
@@ -1318,6 +1363,7 @@ document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeHomework
 (async function init(){
   await loadLessonVideos();
   await loadSubscribers();
+  await loadHomeworkStatus();
   applyI18n('ar');
   let alreadyRegistered = false;
   try{ alreadyRegistered = localStorage.getItem('as_registered') === 'true'; }catch(e){}
