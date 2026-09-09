@@ -481,11 +481,32 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
   <div class="gate-card">
     <button type="button" class="gate-close" id="homework-close" aria-label="close">✕</button>
     <div class="gate-title" data-i18n="hwTitle">تسليم الواجب</div>
-    <div class="gate-sub" data-i18n="hwSub">املأ النموذج التالي عشان تسلّم واجبك، وبعد ما تخلّص تقدر تقفل الشاشة دي عادي.</div>
+    <div class="gate-sub" data-i18n="hwSub">اكتب بياناتك وارفع ملف الواجب، وهيتحفظ مباشرة في الدرايف بتاعنا.</div>
 
-    <div class="form-embed-wrap">
-      <iframe id="hwform-frame" src="" title="Homework submission form" loading="lazy"></iframe>
-    </div>
+    <form id="hw-form">
+      <div class="field" style="margin-bottom:14px;">
+        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelName">الاسم بالكامل</label>
+        <input type="text" id="hw-name" class="mini-input" required>
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelEmail">البريد الإلكتروني</label>
+        <input type="email" id="hw-email" class="mini-input" dir="ltr" required>
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelId">رقم/كود الطالب</label>
+        <input type="text" id="hw-studentid" class="mini-input">
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelLesson">اسم الدرس / الواجب</label>
+        <input type="text" id="hw-lesson" class="mini-input">
+      </div>
+      <div class="field" style="margin-bottom:18px;">
+        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelFile">ملف الواجب</label>
+        <input type="file" id="hw-file" class="mini-input" required>
+      </div>
+      <button type="submit" class="btn-primary gate-submit" id="hw-submit-btn" data-i18n="hwSubmitBtn">إرسال الواجب</button>
+      <div id="hw-status" style="margin-top:12px; font-size:13px; text-align:center;"></div>
+    </form>
   </div>
 </div>
 
@@ -727,7 +748,12 @@ const i18n = {
     navAbout:'👨‍🏫 عن المعلم', navCourses:'📚 الكورسات', navContact:'💬 تواصل', navCta:'./ابدأ_التعلم', navRegister:'تسجيل البيانات', navRegistered:'بياناتك متسجلة ✓',
     navHomework:'📮 تسليم الواجب', navSubscribe:'💳 الاشتراك',
     hwTitle:'تسليم الواجب', hwSub:'املأ النموذج التالي عشان تسلّم واجبك، وبعد ما تخلّص تقدر تقفل الشاشة دي عادي.',
-    hwCardTitle:'خلّصت واجبك؟', hwCardSub:'سلّمه من هنا مباشرة عن طريق نموذج جوجل، من غير ما تسيب الصفحة.', hwCardBtn:'📮 تسليم الواجب',
+    hwCardTitle:'خلّصت واجبك؟', hwCardSub:'سلّمه من هنا مباشرة، وهيتحفظ في الدرايف بتاعنا على طول.', hwCardBtn:'📮 تسليم الواجب',
+    hwLabelName:'الاسم بالكامل', hwLabelEmail:'البريد الإلكتروني', hwLabelId:'رقم/كود الطالب', hwLabelLesson:'اسم الدرس / الواجب', hwLabelFile:'ملف الواجب',
+    hwSubmitBtn:'إرسال الواجب', hwUploading:'جارِ رفع الواجب... من فضلك متقفلش الصفحة.',
+    hwSuccess:'تم استلام واجبك بنجاح ✅', hwError:'حصل خطأ أثناء الرفع، جرّب تاني.',
+    hwMissingFields:'من فضلك املأ كل الحقول وارفع الملف.', hwFileTooBig:'الملف كبير جدًا (الحد الأقصى 20 ميجا).',
+    hwNotConfigured:'رفع الواجبات لسه بيتظبط، جرّب تاني بعد شوية.',
     subTag:'// اشتراك المنصة', subTitle:'اشترك وتابع كل حصصك أول بأول',
     subSub:'اختر صفك الدراسي، حوّل قيمة الاشتراك، وابعتلي صورة التحويل — وهفعّلك في نفس اليوم.',
     tier1Name:'أولى ثانوي', tier2Name:'تانيه ثانوي', perMonth:'جنيه / شهر', subBtnText:'حوّلت الاشتراك',
@@ -784,7 +810,12 @@ const i18n = {
     navAbout:'👨‍🏫 About', navCourses:'📚 Courses', navContact:'💬 Contact', navCta:'./start_learning', navRegister:'Register', navRegistered:'Registered ✓',
     navHomework:'📮 Submit Homework', navSubscribe:'💳 Subscribe',
     hwTitle:'Submit Homework', hwSub:"Fill in the form below to submit your homework — once you're done, you can just close this.",
-    hwCardTitle:'Finished your homework?', hwCardSub:'Submit it right here through a Google Form, without leaving the page.', hwCardBtn:'📮 Submit Homework',
+    hwCardTitle:'Finished your homework?', hwCardSub:"Submit it right here — it'll be saved straight to our Drive.", hwCardBtn:'📮 Submit Homework',
+    hwLabelName:'Full name', hwLabelEmail:'Email address', hwLabelId:'Student ID / code', hwLabelLesson:'Lesson / assignment name', hwLabelFile:'Homework file',
+    hwSubmitBtn:'Submit homework', hwUploading:"Uploading your homework... please don't close this page.",
+    hwSuccess:'Your homework was received ✅', hwError:'Something went wrong during upload, please try again.',
+    hwMissingFields:'Please fill in every field and attach a file.', hwFileTooBig:'File is too large (20MB max).',
+    hwNotConfigured:'Homework submission is still being set up, please try again soon.',
     subTag:'// platform subscription', subTitle:'Subscribe and follow every session as it drops',
     subSub:"Pick your grade, transfer the subscription amount, and send me the payment screenshot — I'll activate you the same day.",
     tier1Name:'1st Secondary', tier2Name:'2nd Secondary', perMonth:'EGP / month', subBtnText:'I paid — notify',
@@ -1190,21 +1221,92 @@ gateConfirm.addEventListener('click', ()=>{
   showSite();
 });
 
-/* ---------- homework submission modal (optional, dismissible) ---------- */
-const HOMEWORK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdfnYbARW7Cs41XVzADOirjrLfeKvw3I_ivbHGV2V6tB6lCPg/viewform?embedded=true';
+/* ---------- homework submission (uploads straight to Drive via Apps Script) ---------- */
+/* Paste your deployed Apps Script Web App URL here once it's ready (ends in /exec). */
+const HOMEWORK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwff4C6rmiPndkxXIPxTOzxwbqbkrKyPRAQYpYvA056N8SMZjYvkp_uBaf1kTvouoqpTA/exec';
+
 const homeworkOverlay = document.getElementById('homework-overlay');
-const hwformFrame = document.getElementById('hwform-frame');
-let hwIframeLoaded = false;
+const hwForm = document.getElementById('hw-form');
+const hwStatus = document.getElementById('hw-status');
+const hwSubmitBtn = document.getElementById('hw-submit-btn');
 
 function openHomeworkModal(e){
   if(e) e.preventDefault();
-  if(!hwIframeLoaded){
-    hwformFrame.src = HOMEWORK_FORM_URL;
-    hwIframeLoaded = true;
-  }
   homeworkOverlay.classList.add('open');
 }
 function closeHomeworkModal(){ homeworkOverlay.classList.remove('open'); }
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+hwForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const dict = i18n[currentLang];
+
+  if(!HOMEWORK_SCRIPT_URL){
+    hwStatus.style.color = '#e5555a';
+    hwStatus.textContent = dict.hwNotConfigured;
+    return;
+  }
+
+  const name = document.getElementById('hw-name').value.trim();
+  const email = document.getElementById('hw-email').value.trim();
+  const studentId = document.getElementById('hw-studentid').value.trim();
+  const lesson = document.getElementById('hw-lesson').value.trim();
+  const fileInput = document.getElementById('hw-file');
+  const file = fileInput.files[0];
+
+  if(!name || !email || !file){
+    hwStatus.style.color = '#e5555a';
+    hwStatus.textContent = dict.hwMissingFields;
+    return;
+  }
+
+  if(file.size > 20 * 1024 * 1024){
+    hwStatus.style.color = '#e5555a';
+    hwStatus.textContent = dict.hwFileTooBig;
+    return;
+  }
+
+  hwSubmitBtn.disabled = true;
+  hwStatus.style.color = 'var(--text-muted)';
+  hwStatus.textContent = dict.hwUploading;
+
+  try{
+    const base64 = await fileToBase64(file);
+    const res = await fetch(HOMEWORK_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        studentName: name,
+        studentEmail: email,
+        studentId: studentId,
+        lesson: lesson,
+        fileName: file.name,
+        mimeType: file.type || 'application/octet-stream',
+        fileData: base64
+      })
+    });
+    const result = await res.json();
+    if(result.status === 'success'){
+      hwStatus.style.color = '#3fbf6a';
+      hwStatus.textContent = dict.hwSuccess;
+      hwForm.reset();
+    } else {
+      throw new Error(result.message || 'upload failed');
+    }
+  }catch(err){
+    hwStatus.style.color = '#e5555a';
+    hwStatus.textContent = dict.hwError;
+  } finally {
+    hwSubmitBtn.disabled = false;
+  }
+});
 
 document.getElementById('nav-homework').addEventListener('click', openHomeworkModal);
 document.getElementById('nav-homework-2').addEventListener('click', openHomeworkModal);
