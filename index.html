@@ -489,10 +489,6 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
         <input type="text" id="hw-name" class="mini-input" required>
       </div>
       <div class="field" style="margin-bottom:14px;">
-        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelEmail">البريد الإلكتروني</label>
-        <input type="email" id="hw-email" class="mini-input" dir="ltr" required>
-      </div>
-      <div class="field" style="margin-bottom:14px;">
         <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelCode">كود الطالب</label>
         <input type="text" id="hw-code" class="mini-input" required>
       </div>
@@ -755,10 +751,12 @@ const i18n = {
     navHomework:'📮 تسليم الواجب', navSubscribe:'💳 الاشتراك',
     hwTitle:'تسليم الواجب', hwSub:'املأ النموذج التالي عشان تسلّم واجبك، وبعد ما تخلّص تقدر تقفل الشاشة دي عادي.',
     hwCardTitle:'خلّصت واجبك؟', hwCardSub:'سلّمه من هنا مباشرة، وهيتحفظ في الدرايف بتاعنا على طول.', hwCardBtn:'📮 تسليم الواجب',
-    hwLabelName:'الاسم ثلاثي', hwLabelEmail:'البريد الإلكتروني', hwLabelCode:'كود الطالب', hwLabelLesson:'اسم الدرس / الواجب', hwLabelFile:'ملفات الواجب (يمكن اختيار أكتر من ملف)',
+    hwLabelName:'الاسم ثلاثي', hwLabelCode:'كود الطالب', hwLabelLesson:'اسم الدرس / الواجب', hwLabelFile:'ملفات الواجب (يمكن اختيار أكتر من ملف)',
     hwSubmitBtn:'إرسال الواجب', hwUploading:'جارِ رفع الواجب... من فضلك متقفلش الصفحة.',
     hwSuccess:'تم استلام واجبك بنجاح ✅', hwError:'حصل خطأ أثناء الرفع، جرّب تاني.',
     hwMissingFields:'من فضلك املأ كل الحقول وارفع ملف واحد على الأقل.', hwFileTooBig:'واحد أو أكتر من الملفات كبير جدًا (الحد الأقصى 20 ميجا للملف).',
+    hwTotalTooBig:'إجمالي حجم الملفات كبير جدًا (الحد الأقصى 40 ميجا في المرة الواحدة). جرّب ترفعهم على دفعتين.',
+    hwTimeout:'الرفع أخد وقت طويل جدًا ومكملش. جرّب تاني، ولو بتستخدم نت ضعيف حاول ترفع ملفات أقل في المرة الواحدة.',
     hwTooManyFiles:'أقصى عدد ملفات مسموح بيه 15 ملف.',
     hwClosedTitle:'استلام الواجبات مقفول دلوقتي', hwClosedDesc:'هيتفتح استلام الواجبات تاني قريبًا. تابع إعلانات المعلم.',
     hwNotConfigured:'رفع الواجبات لسه بيتظبط، جرّب تاني بعد شوية.',
@@ -819,10 +817,12 @@ const i18n = {
     navHomework:'📮 Submit Homework', navSubscribe:'💳 Subscribe',
     hwTitle:'Submit Homework', hwSub:"Fill in the form below to submit your homework — once you're done, you can just close this.",
     hwCardTitle:'Finished your homework?', hwCardSub:"Submit it right here — it'll be saved straight to our Drive.", hwCardBtn:'📮 Submit Homework',
-    hwLabelName:'Full name (three parts)', hwLabelEmail:'Email address', hwLabelCode:'Student code', hwLabelLesson:'Lesson / assignment name', hwLabelFile:'Homework files (you can select more than one)',
+    hwLabelName:'Full name (three parts)', hwLabelCode:'Student code', hwLabelLesson:'Lesson / assignment name', hwLabelFile:'Homework files (you can select more than one)',
     hwSubmitBtn:'Submit homework', hwUploading:"Uploading your homework... please don't close this page.",
     hwSuccess:'Your homework was received ✅', hwError:'Something went wrong during upload, please try again.',
     hwMissingFields:'Please fill in every field and attach at least one file.', hwFileTooBig:'One or more files are too large (20MB max per file).',
+    hwTotalTooBig:'Total file size is too large (40MB max per submission). Try uploading in two batches.',
+    hwTimeout:"Upload took too long and didn't finish. Please try again — if you're on a slow connection, try uploading fewer files at once.",
     hwTooManyFiles:'You can upload a maximum of 15 files.',
     hwClosedTitle:'Homework submission is closed right now', hwClosedDesc:"It'll reopen soon — check your teacher's announcements.",
     hwNotConfigured:'Homework submission is still being set up, please try again soon.',
@@ -1292,13 +1292,12 @@ hwForm.addEventListener('submit', async (e) => {
   }
 
   const name = document.getElementById('hw-name').value.trim();
-  const email = document.getElementById('hw-email').value.trim();
   const studentCode = document.getElementById('hw-code').value.trim();
   const lesson = document.getElementById('hw-lesson').value.trim();
   const fileInput = document.getElementById('hw-file');
   const files = Array.from(fileInput.files);
 
-  if(!name || !email || !studentCode || files.length === 0){
+  if(!name || !studentCode || files.length === 0){
     hwStatus.style.color = '#e5555a';
     hwStatus.textContent = dict.hwMissingFields;
     return;
@@ -1316,9 +1315,19 @@ hwForm.addEventListener('submit', async (e) => {
     return;
   }
 
+  const totalSize = files.reduce((sum, f) => sum + f.size, 0);
+  if(totalSize > 40 * 1024 * 1024){
+    hwStatus.style.color = '#e5555a';
+    hwStatus.textContent = dict.hwTotalTooBig;
+    return;
+  }
+
   hwSubmitBtn.disabled = true;
   hwStatus.style.color = 'var(--text-muted)';
   hwStatus.textContent = dict.hwUploading;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
 
   try{
     const filesPayload = await Promise.all(files.map(async (f) => ({
@@ -1329,14 +1338,15 @@ hwForm.addEventListener('submit', async (e) => {
 
     const res = await fetch(HOMEWORK_SCRIPT_URL, {
       method: 'POST',
+      signal: controller.signal,
       body: JSON.stringify({
         studentName: name,
-        studentEmail: email,
         studentCode: studentCode,
         lesson: lesson,
         files: filesPayload
       })
     });
+    clearTimeout(timeoutId);
     const result = await res.json();
     if(result.status === 'success'){
       hwStatus.style.color = '#3fbf6a';
@@ -1346,8 +1356,9 @@ hwForm.addEventListener('submit', async (e) => {
       throw new Error(result.message || 'upload failed');
     }
   }catch(err){
+    clearTimeout(timeoutId);
     hwStatus.style.color = '#e5555a';
-    hwStatus.textContent = dict.hwError;
+    hwStatus.textContent = (err.name === 'AbortError') ? dict.hwTimeout : dict.hwError;
   } finally {
     hwSubmitBtn.disabled = false;
   }
