@@ -1599,6 +1599,7 @@ hwForm.addEventListener('submit', async (e) => {
   progressBar.style.width = '0%';
 
   let submitted = false;
+  let stopProgress = () => {};
   try{
     const filesPayload = await Promise.all(files.map(async (f) => ({
       fileName: f.name,
@@ -1606,9 +1607,10 @@ hwForm.addEventListener('submit', async (e) => {
       fileData: await fileToBase64(f)
     })));
 
-    hwStatus.textContent = dict.hwUploading + ' 0%';
+    const totalBytes = files.reduce((sum, f) => sum + f.size, 0);
+    stopProgress = startFakeProgress(progressBar, hwStatus, dict.hwUploading, totalBytes);
 
-    const result = await postHomeworkXHR(HOMEWORK_SCRIPT_URL, {
+    const result = await postHomeworkFetch(HOMEWORK_SCRIPT_URL, {
       studentName: name,
       studentCode: studentCode,
       lesson: lessonId + ' - ' + lessonTitle,
@@ -1616,10 +1618,9 @@ hwForm.addEventListener('submit', async (e) => {
       mcqTotal: grade ? grade.total : '',
       mcqAnswers: grade ? grade.answerLetters.join('|') : '',
       files: filesPayload
-    }, (pct) => {
-      progressBar.style.width = pct + '%';
-      hwStatus.textContent = dict.hwUploading + ' ' + pct + '%';
     });
+
+    stopProgress();
 
     if(result.status === 'success'){
       submitted = true;
@@ -1637,6 +1638,7 @@ hwForm.addEventListener('submit', async (e) => {
       throw new Error(result.message || 'upload failed');
     }
   }catch(err){
+    stopProgress();
     hwStatus.style.color = '#e5555a';
     hwStatus.textContent = dict.hwError + (err && err.message ? ' (' + err.message + ')' : '');
     console.error('Homework submit failed:', err);
@@ -1648,30 +1650,46 @@ hwForm.addEventListener('submit', async (e) => {
   }
 });
 
-/* Uses XMLHttpRequest instead of fetch so we can report real upload progress
-   (fetch has no upload-progress event), and a generous timeout so a slow
-   connection fails with a clear message instead of hanging forever. */
-function postHomeworkXHR(url, payload, onProgress){
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    xhr.timeout = 6 * 60 * 1000; // 6 minutes
-    xhr.upload.onprogress = (evt) => {
-      if(evt.lengthComputable && onProgress){
-        onProgress(Math.min(99, Math.round((evt.loaded / evt.total) * 100)));
-      }
-    };
-    xhr.onload = () => {
-      try{
-        resolve(JSON.parse(xhr.responseText));
-      }catch(err){
-        reject(new Error('تعذّر قراءة رد الخادم — ' + err.message));
-      }
-    };
-    xhr.onerror = () => reject(new Error('تعذّر الاتصال بالخادم، تأكد من اتصال الإنترنت.'));
-    xhr.ontimeout = () => reject(new Error('الرفع أخد وقت طويل جدًا وانقطع — جرّب نت أسرع أو ملف أصغر.'));
-    xhr.send(JSON.stringify(payload));
-  });
+/* Plain fetch (proven reliable with this Apps Script endpoint) wrapped with a
+   timeout via AbortController, so a very slow connection fails with a clear
+   message instead of hanging forever. fetch has no upload-progress event, so
+   the visible progress bar (below) is a paced estimate, not byte-exact. */
+async function postHomeworkFetch(url, payload, timeoutMs){
+  timeoutMs = timeoutMs || 6 * 60 * 1000; // 6 minutes
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try{
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      signal: controller.signal
+    });
+    return await res.json();
+  } catch(err){
+    if(err.name === 'AbortError'){
+      throw new Error('الرفع أخد وقت طويل جدًا وانقطع — جرّب نت أسرع أو ملف أصغر.');
+    }
+    throw new Error('تعذّر الاتصال بالخادم، تأكد من اتصال الإنترنت.');
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* Paced/estimated progress bar: fetch can't report real upload bytes, so we
+   animate toward ~92% over a duration estimated from the file size (assuming
+   a conservative slow-mobile speed), then jump to 100% once the real
+   response actually arrives. Returns a function that stops the animation. */
+function startFakeProgress(bar, statusEl, label, totalBytes){
+  const assumedBytesPerSecond = 130 * 1024; // conservative slow-mobile estimate
+  const estimatedMs = Math.max(4000, (totalBytes / assumedBytesPerSecond) * 1000);
+  const start = Date.now();
+  const timer = setInterval(() => {
+    const elapsed = Date.now() - start;
+    const pct = Math.min(92, Math.round((elapsed / estimatedMs) * 90));
+    bar.style.width = pct + '%';
+    statusEl.textContent = label + ' ' + pct + '%';
+  }, 350);
+  return () => clearInterval(timer);
 }
 
 
