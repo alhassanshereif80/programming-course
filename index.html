@@ -535,6 +535,11 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
       </div>
       <button type="submit" class="btn-primary gate-submit" id="hw-submit-btn" data-i18n="hwSubmitBtn">إرسال الواجب</button>
       <div id="hw-status" style="margin-top:12px; font-size:13px; text-align:center;"></div>
+      <div id="hw-progress-wrap" style="display:none; margin-top:10px;">
+        <div style="background:var(--border); border-radius:6px; overflow:hidden; height:7px;">
+          <div id="hw-progress-bar" style="background:var(--teal); height:100%; width:0%; transition:width .15s linear;"></div>
+        </div>
+      </div>
     </form>
 
     <div id="hw-closed-state" style="display:none; text-align:center; padding:20px 0;">
@@ -791,6 +796,7 @@ const i18n = {
     hwMcqIncomplete:'من فضلك جاوب على كل الأسئلة الاختيارية الـ25 قبل الإرسال.',
     hwScoreLabel:'نتيجتك في الاختياري:',
     hwSubmitBtn:'إرسال الواجب', hwUploading:'جارِ رفع الواجب... من فضلك متقفلش الصفحة.',
+    hwPreparing:'بيتجهز الملف للرفع...',
     hwSuccess:'تم استلام واجبك بنجاح ✅', hwError:'حصل خطأ أثناء الرفع، جرّب تاني.',
     hwPartial:'اترفع ملفك بنجاح، بس حصلت مشكلة بسيطة في تسجيل الدرجة — كلّم المعلم يتأكد.',
     hwMissingFields:'من فضلك املأ كل الحقول وارفع ملف واحد على الأقل.', hwFileTooBig:'واحد أو أكتر من الملفات كبير جدًا (الحد الأقصى 20 ميجا للملف).',
@@ -861,6 +867,7 @@ const i18n = {
     hwMcqIncomplete:'Please answer all 25 multiple-choice questions before submitting.',
     hwScoreLabel:'Your multiple-choice score:',
     hwSubmitBtn:'Submit homework', hwUploading:"Uploading your homework... please don't close this page.",
+    hwPreparing:'Preparing your file for upload...',
     hwSuccess:'Your homework was received ✅', hwError:'Something went wrong during upload, please try again.',
     hwPartial:'Your file uploaded fine, but there was a small issue saving your score — let your teacher know.',
     hwMissingFields:'Please fill in every field and attach at least one file.', hwFileTooBig:'One or more files are too large (20MB max per file).',
@@ -1364,6 +1371,8 @@ function openHomeworkModal(e){
     resetHwMcqUi();
     updateHwFileLabel('');
     hwStatus.textContent = '';
+    document.getElementById('hw-progress-wrap').style.display = 'none';
+    document.getElementById('hw-progress-bar').style.width = '0%';
   } else {
     hwForm.style.display = 'none';
     hwClosedState.style.display = 'block';
@@ -1583,7 +1592,11 @@ hwForm.addEventListener('submit', async (e) => {
 
   hwSubmitBtn.disabled = true;
   hwStatus.style.color = 'var(--text-muted)';
-  hwStatus.textContent = dict.hwUploading;
+  hwStatus.textContent = dict.hwPreparing;
+  const progressWrap = document.getElementById('hw-progress-wrap');
+  const progressBar = document.getElementById('hw-progress-bar');
+  progressWrap.style.display = 'block';
+  progressBar.style.width = '0%';
 
   let submitted = false;
   try{
@@ -1593,26 +1606,30 @@ hwForm.addEventListener('submit', async (e) => {
       fileData: await fileToBase64(f)
     })));
 
-    const res = await fetch(HOMEWORK_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({
-        studentName: name,
-        studentCode: studentCode,
-        lesson: lessonId + ' - ' + lessonTitle,
-        mcqScore: grade ? grade.correctCount : '',
-        mcqTotal: grade ? grade.total : '',
-        mcqAnswers: grade ? grade.answerLetters.join('|') : '',
-        files: filesPayload
-      })
+    hwStatus.textContent = dict.hwUploading + ' 0%';
+
+    const result = await postHomeworkXHR(HOMEWORK_SCRIPT_URL, {
+      studentName: name,
+      studentCode: studentCode,
+      lesson: lessonId + ' - ' + lessonTitle,
+      mcqScore: grade ? grade.correctCount : '',
+      mcqTotal: grade ? grade.total : '',
+      mcqAnswers: grade ? grade.answerLetters.join('|') : '',
+      files: filesPayload
+    }, (pct) => {
+      progressBar.style.width = pct + '%';
+      hwStatus.textContent = dict.hwUploading + ' ' + pct + '%';
     });
-    const result = await res.json();
+
     if(result.status === 'success'){
       submitted = true;
+      progressBar.style.width = '100%';
       hwStatus.style.color = '#3fbf6a';
       hwStatus.textContent = dict.hwSuccess;
       lockHwFormAfterSubmit();
     } else if(result.status === 'partial'){
       submitted = true;
+      progressBar.style.width = '100%';
       hwStatus.style.color = '#e0a83f';
       hwStatus.textContent = dict.hwPartial + (result.message ? ' — ' + result.message : '');
       lockHwFormAfterSubmit();
@@ -1624,9 +1641,39 @@ hwForm.addEventListener('submit', async (e) => {
     hwStatus.textContent = dict.hwError + (err && err.message ? ' (' + err.message + ')' : '');
     console.error('Homework submit failed:', err);
   } finally {
-    if(!submitted) hwSubmitBtn.disabled = false;
+    if(!submitted){
+      hwSubmitBtn.disabled = false;
+      progressWrap.style.display = 'none';
+    }
   }
 });
+
+/* Uses XMLHttpRequest instead of fetch so we can report real upload progress
+   (fetch has no upload-progress event), and a generous timeout so a slow
+   connection fails with a clear message instead of hanging forever. */
+function postHomeworkXHR(url, payload, onProgress){
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.timeout = 6 * 60 * 1000; // 6 minutes
+    xhr.upload.onprogress = (evt) => {
+      if(evt.lengthComputable && onProgress){
+        onProgress(Math.min(99, Math.round((evt.loaded / evt.total) * 100)));
+      }
+    };
+    xhr.onload = () => {
+      try{
+        resolve(JSON.parse(xhr.responseText));
+      }catch(err){
+        reject(new Error('تعذّر قراءة رد الخادم — ' + err.message));
+      }
+    };
+    xhr.onerror = () => reject(new Error('تعذّر الاتصال بالخادم، تأكد من اتصال الإنترنت.'));
+    xhr.ontimeout = () => reject(new Error('الرفع أخد وقت طويل جدًا وانقطع — جرّب نت أسرع أو ملف أصغر.'));
+    xhr.send(JSON.stringify(payload));
+  });
+}
+
 
 document.getElementById('nav-homework').addEventListener('click', openHomeworkModal);
 document.getElementById('nav-homework-2').addEventListener('click', openHomeworkModal);
