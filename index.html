@@ -514,10 +514,6 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
         <input type="text" id="hw-name" class="mini-input" required>
       </div>
       <div class="field" style="margin-bottom:14px;">
-        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelEmail">البريد الإلكتروني</label>
-        <input type="email" id="hw-email" class="mini-input" dir="ltr" required>
-      </div>
-      <div class="field" style="margin-bottom:14px;">
         <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelCode">كود الطالب</label>
         <input type="text" id="hw-code" class="mini-input" required>
       </div>
@@ -534,7 +530,7 @@ src="https://www.facebook.com/tr?id=1414285990572286&ev=PageView&noscript=1"
       </div>
 
       <div class="field" style="margin-bottom:18px;">
-        <label style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;" data-i18n="hwLabelFile">ملف إجابات الأسئلة المقالية (يمكن اختيار أكتر من ملف)</label>
+        <label id="hw-file-label" style="display:block; font-size:13px; color:var(--text-muted); margin-bottom:7px;">ملف إجابات الأسئلة المقالية (يمكن اختيار أكتر من ملف)</label>
         <input type="file" id="hw-file" class="mini-input" required multiple>
       </div>
       <button type="submit" class="btn-primary gate-submit" id="hw-submit-btn" data-i18n="hwSubmitBtn">إرسال الواجب</button>
@@ -789,6 +785,7 @@ const i18n = {
     hwTitle:'تسليم الواجب', hwSub:'املأ النموذج التالي عشان تسلّم واجبك، وبعد ما تخلّص تقدر تقفل الشاشة دي عادي.',
     hwCardTitle:'خلّصت واجبك؟', hwCardSub:'سلّمه من هنا مباشرة، وهيتحفظ في الدرايف بتاعنا على طول.', hwCardBtn:'📮 تسليم الواجب',
     hwLabelName:'الاسم ثلاثي', hwLabelEmail:'البريد الإلكتروني', hwLabelCode:'كود الطالب', hwLabelLesson:'اختر الدرس اللي هتسلّم واجبه', hwLabelFile:'ملف إجابات الأسئلة المقالية (يمكن اختيار أكتر من ملف)',
+    hwLabelFileGeneric:'ملفات الواجب (يمكن اختيار أكتر من ملف)',
     hwLessonPlaceholder:'-- اختر الدرس --', hwLessonLockedNote:'🔒 تسليم الواجب لهذا الدرس مقفول دلوقتي.',
     hwMcqInstructions:'جاوب على الأسئلة الاختيارية الـ25 كلها، هيتصحح لك أوتوماتيك أول ما تدوس "إرسال الواجب" وتشوف الصح والغلط.',
     hwMcqIncomplete:'من فضلك جاوب على كل الأسئلة الاختيارية الـ25 قبل الإرسال.',
@@ -858,6 +855,7 @@ const i18n = {
     hwTitle:'Submit Homework', hwSub:"Fill in the form below to submit your homework — once you're done, you can just close this.",
     hwCardTitle:'Finished your homework?', hwCardSub:"Submit it right here — it'll be saved straight to our Drive.", hwCardBtn:'📮 Submit Homework',
     hwLabelName:'Full name (three parts)', hwLabelEmail:'Email address', hwLabelCode:'Student code', hwLabelLesson:'Pick the lesson you\'re submitting', hwLabelFile:'Essay-answer files (you can select more than one)',
+    hwLabelFileGeneric:'Homework files (you can select more than one)',
     hwLessonPlaceholder:'-- Pick a lesson --', hwLessonLockedNote:'🔒 Homework submission for this lesson is closed right now.',
     hwMcqInstructions:'Answer all 25 multiple-choice questions — they\'ll be auto-graded the moment you hit "Submit homework" so you can see what you got right.',
     hwMcqIncomplete:'Please answer all 25 multiple-choice questions before submitting.',
@@ -953,7 +951,10 @@ function applyI18n(lang){
   document.getElementById('sub-wa-1').href = 'https://wa.me/201064666228?text=' + encodeURIComponent(dict.subWaMsg1);
   document.getElementById('sub-wa-2').href = 'https://wa.me/201064666228?text=' + encodeURIComponent(dict.subWaMsg2);
 
-  if(document.getElementById('hw-lesson')) populateHwLessonSelect();
+  if(document.getElementById('hw-lesson')){
+    populateHwLessonSelect();
+    updateHwFileLabel(document.getElementById('hw-lesson').value);
+  }
 }
 
 document.getElementById('lang-toggle').addEventListener('click', ()=>{
@@ -1286,6 +1287,7 @@ const HOMEWORK_BANK = {"1-1": [{"q": "أي المراحل التالية كان�
    so nothing locks by accident before you set this sheet up. Leave empty to keep every lesson open. */
 const LESSON_LOCK_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQowpMWB-SWMUbtrFHEsAO9Qps9oWDGVgWjH0LNyaipD81jmmGGjMe7c1Z8TZc5HLmlG3fw_2VtO2a2/pub?gid=0&single=true&output=csv';
 let lessonLockStatus = {};
+let lessonMcqStatus = {}; // lessonId -> 'off' means "no MCQ for this lesson's homework, file upload only"
 
 async function loadLessonLockStatus(){
   if(!LESSON_LOCK_SHEET_CSV_URL) return;
@@ -1293,15 +1295,30 @@ async function loadLessonLockStatus(){
     const { header, rows } = await fetchCsvRows(LESSON_LOCK_SHEET_CSV_URL);
     const idIdx = header.indexOf('lesson_id');
     const statusIdx = header.indexOf('status');
-    if(idIdx === -1 || statusIdx === -1) return;
-    const map = {};
+    const mcqIdx = header.indexOf('mcq');
+    if(idIdx === -1) return;
+    const lockMap = {};
+    const mcqMap = {};
     rows.slice(1).forEach(r=>{
       const id = (r[idIdx] || '').trim();
-      const st = (r[statusIdx] || '').trim().toLowerCase();
-      if(id) map[id] = st === 'closed' ? 'closed' : 'open';
+      if(!id) return;
+      if(statusIdx !== -1){
+        const st = (r[statusIdx] || '').trim().toLowerCase();
+        lockMap[id] = st === 'closed' ? 'closed' : 'open';
+      }
+      if(mcqIdx !== -1){
+        const mc = (r[mcqIdx] || '').trim().toLowerCase();
+        mcqMap[id] = (mc === 'off' || mc === 'no' || mc === '0' || mc === 'false') ? 'off' : 'on';
+      }
     });
-    lessonLockStatus = map;
+    lessonLockStatus = lockMap;
+    lessonMcqStatus = mcqMap;
   }catch(e){ console.warn('Could not load lesson lock sheet', e); }
+}
+
+function lessonHasMcq(lessonId){
+  if(!HOMEWORK_BANK[lessonId]) return false;
+  return lessonMcqStatus[lessonId] !== 'off';
 }
 
 function escapeHtml(str){
@@ -1341,8 +1358,12 @@ function openHomeworkModal(e){
   if(homeworkOpen){
     hwForm.style.display = 'block';
     hwClosedState.style.display = 'none';
+    hwForm.reset();
+    unlockHwForm();
     populateHwLessonSelect();
     resetHwMcqUi();
+    updateHwFileLabel('');
+    hwStatus.textContent = '';
   } else {
     hwForm.style.display = 'none';
     hwClosedState.style.display = 'block';
@@ -1350,6 +1371,22 @@ function openHomeworkModal(e){
   homeworkOverlay.classList.add('open');
 }
 function closeHomeworkModal(){ homeworkOverlay.classList.remove('open'); }
+
+function lockHwFormAfterSubmit(){
+  document.getElementById('hw-name').disabled = true;
+  document.getElementById('hw-code').disabled = true;
+  document.getElementById('hw-lesson').disabled = true;
+  document.getElementById('hw-file').disabled = true;
+  document.querySelectorAll('#hw-mcq-list input[type="radio"]').forEach(r => { r.disabled = true; });
+  hwSubmitBtn.disabled = true;
+}
+function unlockHwForm(){
+  document.getElementById('hw-name').disabled = false;
+  document.getElementById('hw-code').disabled = false;
+  document.getElementById('hw-lesson').disabled = false;
+  document.getElementById('hw-file').disabled = false;
+  hwSubmitBtn.disabled = false;
+}
 
 /* ---------- homework: lesson dropdown (grouped by unit, shows a lock icon for closed lessons) ---------- */
 function populateHwLessonSelect(){
@@ -1460,11 +1497,19 @@ function gradeHwMcqs(lessonId){
   return { correctCount, total: qs.length, unanswered, answerLetters };
 }
 
+function updateHwFileLabel(lessonId){
+  const label = document.getElementById('hw-file-label');
+  if(!label) return;
+  const dict = i18n[currentLang];
+  label.textContent = lessonHasMcq(lessonId) ? dict.hwLabelFile : dict.hwLabelFileGeneric;
+}
+
 document.getElementById('hw-lesson').addEventListener('change', () => {
   const sel = document.getElementById('hw-lesson');
   updateHwLessonNote();
   resetHwMcqUi();
-  if(sel.value && lessonLockStatus[sel.value] !== 'closed'){
+  updateHwFileLabel(sel.value);
+  if(sel.value && lessonLockStatus[sel.value] !== 'closed' && lessonHasMcq(sel.value)){
     renderHwMcqs(sel.value);
   }
 });
@@ -1489,13 +1534,12 @@ hwForm.addEventListener('submit', async (e) => {
   }
 
   const name = document.getElementById('hw-name').value.trim();
-  const email = document.getElementById('hw-email').value.trim();
   const studentCode = document.getElementById('hw-code').value.trim();
   const lessonId = document.getElementById('hw-lesson').value.trim();
   const fileInput = document.getElementById('hw-file');
   const files = Array.from(fileInput.files);
 
-  if(!name || !email || !studentCode || !lessonId || files.length === 0){
+  if(!name || !studentCode || !lessonId || files.length === 0){
     hwStatus.style.color = '#e5555a';
     hwStatus.textContent = dict.hwMissingFields;
     return;
@@ -1523,7 +1567,7 @@ hwForm.addEventListener('submit', async (e) => {
   const lessonTitle = lessonObj ? (currentLang === 'ar' ? lessonObj.title_ar : lessonObj.title_en) : lessonId;
 
   let grade = null;
-  if(HOMEWORK_BANK[lessonId]){
+  if(lessonHasMcq(lessonId)){
     grade = gradeHwMcqs(lessonId);
     if(grade.unanswered > 0){
       hwStatus.style.color = '#e5555a';
@@ -1541,6 +1585,7 @@ hwForm.addEventListener('submit', async (e) => {
   hwStatus.style.color = 'var(--text-muted)';
   hwStatus.textContent = dict.hwUploading;
 
+  let submitted = false;
   try{
     const filesPayload = await Promise.all(files.map(async (f) => ({
       fileName: f.name,
@@ -1552,7 +1597,6 @@ hwForm.addEventListener('submit', async (e) => {
       method: 'POST',
       body: JSON.stringify({
         studentName: name,
-        studentEmail: email,
         studentCode: studentCode,
         lesson: lessonId + ' - ' + lessonTitle,
         mcqScore: grade ? grade.correctCount : '',
@@ -1563,17 +1607,15 @@ hwForm.addEventListener('submit', async (e) => {
     });
     const result = await res.json();
     if(result.status === 'success'){
+      submitted = true;
       hwStatus.style.color = '#3fbf6a';
       hwStatus.textContent = dict.hwSuccess;
-      hwForm.reset();
-      resetHwMcqUi();
-      populateHwLessonSelect();
+      lockHwFormAfterSubmit();
     } else if(result.status === 'partial'){
+      submitted = true;
       hwStatus.style.color = '#e0a83f';
       hwStatus.textContent = dict.hwPartial + (result.message ? ' — ' + result.message : '');
-      hwForm.reset();
-      resetHwMcqUi();
-      populateHwLessonSelect();
+      lockHwFormAfterSubmit();
     } else {
       throw new Error(result.message || 'upload failed');
     }
@@ -1582,7 +1624,7 @@ hwForm.addEventListener('submit', async (e) => {
     hwStatus.textContent = dict.hwError + (err && err.message ? ' (' + err.message + ')' : '');
     console.error('Homework submit failed:', err);
   } finally {
-    hwSubmitBtn.disabled = false;
+    if(!submitted) hwSubmitBtn.disabled = false;
   }
 });
 
