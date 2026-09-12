@@ -795,6 +795,7 @@ const i18n = {
     hwScoreLabel:'نتيجتك في الاختياري:',
     hwSubmitBtn:'إرسال الواجب', hwUploading:'جارِ رفع الواجب... من فضلك متقفلش الصفحة.',
     hwSuccess:'تم استلام واجبك بنجاح ✅', hwError:'حصل خطأ أثناء الرفع، جرّب تاني.',
+    hwPartial:'اترفع ملفك بنجاح، بس حصلت مشكلة بسيطة في تسجيل الدرجة — كلّم المعلم يتأكد.',
     hwMissingFields:'من فضلك املأ كل الحقول وارفع ملف واحد على الأقل.', hwFileTooBig:'واحد أو أكتر من الملفات كبير جدًا (الحد الأقصى 20 ميجا للملف).',
     hwTooManyFiles:'أقصى عدد ملفات مسموح بيه 15 ملف.',
     hwClosedTitle:'استلام الواجبات مقفول دلوقتي', hwClosedDesc:'هيتفتح استلام الواجبات تاني قريبًا. تابع إعلانات المعلم.',
@@ -863,6 +864,7 @@ const i18n = {
     hwScoreLabel:'Your multiple-choice score:',
     hwSubmitBtn:'Submit homework', hwUploading:"Uploading your homework... please don't close this page.",
     hwSuccess:'Your homework was received ✅', hwError:'Something went wrong during upload, please try again.',
+    hwPartial:'Your file uploaded fine, but there was a small issue saving your score — let your teacher know.',
     hwMissingFields:'Please fill in every field and attach at least one file.', hwFileTooBig:'One or more files are too large (20MB max per file).',
     hwTooManyFiles:'You can upload a maximum of 15 files.',
     hwClosedTitle:'Homework submission is closed right now', hwClosedDesc:"It'll reopen soon — check your teacher's announcements.",
@@ -1282,7 +1284,7 @@ const HOMEWORK_BANK = {"1-1": [{"q": "أي المراحل التالية كان�
    Expected columns: lesson_id, status ("open" or "closed").
    Add one row per lesson you want to manage — any lesson_id not listed stays OPEN by default,
    so nothing locks by accident before you set this sheet up. Leave empty to keep every lesson open. */
-const LESSON_LOCK_SHEET_CSV_URL = '';
+const LESSON_LOCK_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQowpMWB-SWMUbtrFHEsAO9Qps9oWDGVgWjH0LNyaipD81jmmGGjMe7c1Z8TZc5HLmlG3fw_2VtO2a2/pub?gid=0&single=true&output=csv';
 let lessonLockStatus = {};
 
 async function loadLessonLockStatus(){
@@ -1566,12 +1568,19 @@ hwForm.addEventListener('submit', async (e) => {
       hwForm.reset();
       resetHwMcqUi();
       populateHwLessonSelect();
+    } else if(result.status === 'partial'){
+      hwStatus.style.color = '#e0a83f';
+      hwStatus.textContent = dict.hwPartial + (result.message ? ' — ' + result.message : '');
+      hwForm.reset();
+      resetHwMcqUi();
+      populateHwLessonSelect();
     } else {
       throw new Error(result.message || 'upload failed');
     }
   }catch(err){
     hwStatus.style.color = '#e5555a';
-    hwStatus.textContent = dict.hwError;
+    hwStatus.textContent = dict.hwError + (err && err.message ? ' (' + err.message + ')' : '');
+    console.error('Homework submit failed:', err);
   } finally {
     hwSubmitBtn.disabled = false;
   }
